@@ -31,11 +31,15 @@ dc-start: dc-build dc-up ## Build and start the containers
 dc-down: ## Stop the docker hub
 	@$(DOCKER_COMP) down --remove-orphans
 
+dc-re: ## Restart the docker hub
+	@$(DOCKER_COMP) down --remove-orphans
+	@$(DOCKER_COMP) up -d --remove-orphans
+
 dc-logs: ## Show live logs
 	@$(DOCKER_COMP) logs --tail=0 --follow
 
 dc-sh: ## Connect to the PHP FPM container
-	@$(SYM_CONT) sh
+	@$(SYM_CONT) bash
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
@@ -75,7 +79,7 @@ validate-schema: ## Valid doctrine mapping
 ## —— PHP 🐘 ——————————————————————————————————————————————————————————————————
 
 test: ## Test phpunit
-	@$(PHP) bin/phpunit tests -v --testdox
+	@$(SYM_CONT) ./vendor/phpunit/phpunit/phpunit tests
 
 analyse-php: ## Analyse php
 	@$(SYM_CONT) ./vendor/bin/phpstan analyse -c phpstan.neon
@@ -89,7 +93,8 @@ lint-twig:
 fix-php: ## Fix php
 	@$(SYM_CONT) ./vendor/bin/php-cs-fixer fix
 
-check: fix-php analyse-php validate-schema lint-twig test
+check: fix-php analyse-php validate-schema lint-twig
+check-t: fix-php analyse-php validate-schema lint-twig test
 
 ## —— Assets 💄 ———————————————————————————————————————————————————————————————————
 

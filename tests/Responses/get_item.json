@@ -1,0 +1,10 @@
+{
+  "@context": "/api/contexts/Item",
+  "@id": "@string@",
+  "@type": "Item",
+  "id": "@string@",
+  "type": "consume||material||scrap||ammo||account||antique",
+  "name": "@string@",
+  "description": "@string@",
+  "imageUrl": "@string@.isUrl()"
+}

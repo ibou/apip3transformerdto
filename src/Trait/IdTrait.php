@@ -2,17 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace App\Trait;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
 
 trait IdTrait
 {
+    private const string TYPES_UUID = 'uuid';
+    private const string STRATEGY_CUSTOM = 'CUSTOM';
+
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ORM\Column(type: self::TYPES_UUID, unique: true)]
+    #[ORM\GeneratedValue(strategy: self::STRATEGY_CUSTOM)]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private ?Uuid $id = null;
 
     public function getId(): ?Uuid
