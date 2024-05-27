@@ -4,17 +4,6 @@ namespace App\Utils;
 
 class CrawlerUtils
 {
-    public static function findChildByName(\DOMNode $node, string $childName): ?\DOMNode
-    {
-        foreach ($node->childNodes as $child) {
-            if ($child->nodeName === $childName) {
-                return $child;
-            }
-        }
-
-        return null;
-    }
-
     public static function findAttributeByName(?\DOMNode $node, string $attributeName): ?string
     {
         if (null === $node || null === $node->attributes) {
@@ -29,5 +18,10 @@ class CrawlerUtils
         }
 
         return null;
+    }
+
+    public static function is(\DOMNode $node, string $nodeName): bool
+    {
+        return $node->nodeName === $nodeName;
     }
 }

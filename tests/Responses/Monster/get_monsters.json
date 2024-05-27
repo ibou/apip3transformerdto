@@ -1,0 +1,26 @@
+{
+  "@context": "/api/contexts/Monster",
+  "@id": "/api/monsters",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@",
+      "@type": "Monster",
+      "id": "@string@",
+      "type": "lg||sm",
+      "name": "@string@",
+      "description": "@string@",
+      "imageUrl": "@string@.isUrl()",
+      "bodyParts": "@array@"
+    },
+    "@...@"
+  ],
+  "hydra:view": {
+    "@id": "/api/monsters?page=1",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "/api/monsters?page=1",
+    "hydra:last": "@string@",
+    "hydra:next": "@string@"
+  }
+  }

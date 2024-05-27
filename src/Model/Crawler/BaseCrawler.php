@@ -29,9 +29,14 @@ class BaseCrawler
         return $this->crawler->filter($selector)->getIterator();
     }
 
-    public function findNodeBySelector(string $selector): ?\DOMNode
+    public function findCurrentNodeBySelector(string $selector): ?\DOMNode
     {
         return $this->findNodesBySelector($selector)->current();
+    }
+
+    public function findNodeBySelectorAndKey(string $selector, int $key): ?\DOMNode
+    {
+        return $this->findNodesBySelector($selector)->offsetGet($key);
     }
 
     public function clear(): void

@@ -12,6 +12,8 @@ class BaseJsonApiTestCase extends JsonApiTestCase
     use ResetDatabase;
     use Factories;
 
+    protected const int ITEMS_PER_PAGE = 30;
+
     #[Before]
     public function setUpClient(): void
     {

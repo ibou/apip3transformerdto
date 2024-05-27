@@ -37,12 +37,12 @@ class EntityStateProvider extends AbstractProvider
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): TraversablePaginator
     {
         $entities = $this->collectionProvider->provide($operation, $uriVariables, $context);
-        \assert($entities instanceof Paginator && null !== $operation->getClass());
+        \assert($entities instanceof Paginator);
 
         $resources = [];
         /** @var object $entity */
         foreach ($entities as $entity) {
-            $resources[] = $this->transformerService->transform($entity, $operation->getClass());
+            $resources[] = $this->transformerService->transform($entity);
         }
 
         return new TraversablePaginator(
@@ -62,13 +62,11 @@ class EntityStateProvider extends AbstractProvider
      */
     protected function provideItem(Operation $operation, array $uriVariables = [], array $context = []): object
     {
-        \assert(null !== $operation->getClass());
-
         $entity = $this->itemProvider->provide($operation, $uriVariables, $context);
         if (null === $entity) {
             throw new ApiException('Not found.', Response::HTTP_NOT_FOUND);
         }
 
-        return $this->transformerService->transform($entity, $operation->getClass());
+        return $this->transformerService->transform($entity);
     }
 }

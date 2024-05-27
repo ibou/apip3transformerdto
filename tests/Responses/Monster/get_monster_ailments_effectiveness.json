@@ -1,0 +1,18 @@
+{
+  "@context": "/api/contexts/MonsterAilmentEffectiveness",
+  "@id": "@string@",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@",
+      "@type": "MonsterAilmentEffectiveness",
+      "id": "@string@",
+      "buildup": "@string@",
+      "decay": "@string@",
+      "damage": "@integer@",
+      "duration": "@string@"
+    },
+    "@...@"
+  ]
+}

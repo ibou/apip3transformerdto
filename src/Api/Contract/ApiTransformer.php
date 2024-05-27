@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Api\Contracts;
+namespace App\Api\Contract;
 
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-#[AutoconfigureTag('app.api.transformer')]
+#[AutoconfigureTag('api.transformer')]
 interface ApiTransformer
 {
     public function transform(object $source): object;
 
-    public function supportsTransform(object $source, string $targetFqcn): bool;
+    public function supportsTransform(object $source): bool;
 }

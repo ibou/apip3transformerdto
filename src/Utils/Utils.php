@@ -32,4 +32,9 @@ class Utils
             'mem: '.$memory.'MB', 'peak: '.$peakMemory.'MB',
         ]);
     }
+
+    public static function replaceMultipleSpacesByOne(string $str): string
+    {
+        return preg_replace('!\s+!', ' ', $str) ?? $str;
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Synchronizer;
 
 use App\Helper\SynchronizerHelper;
+use App\Synchronizer\Service\Cache;
 use App\Utils\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -16,6 +17,7 @@ abstract class AbstractSynchronizer
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $em,
         private readonly SynchronizerHelper $helper,
+        private readonly Cache $cache,
         private readonly string $kiranicoUrl
     ) {
     }
@@ -37,6 +39,11 @@ abstract class AbstractSynchronizer
         return $this->helper;
     }
 
+    protected function getCache(): Cache
+    {
+        return $this->cache;
+    }
+
     protected function getKiranicoUrl(): string
     {
         return $this->kiranicoUrl;
@@ -46,6 +53,7 @@ abstract class AbstractSynchronizer
     {
         $this->em->flush();
         $this->em->clear();
+        $this->cache->clear();
     }
 
     protected function ping(): void

@@ -1,0 +1,16 @@
+{
+  "@context": "/api/contexts/MonsterBodyPartWeakness",
+  "@id": "@string@",
+  "@type": "MonsterBodyPartWeakness",
+  "id": "@string@",
+  "state": "@integer@",
+  "hitSlash": "@integer@",
+  "hitStrike": "@integer@",
+  "hitShell": "@integer@",
+  "elementFire": "@integer@",
+  "elementWater": "@integer@",
+  "elementIce": "@integer@",
+  "elementThunder": "@integer@",
+  "elementDragon": "@integer@",
+  "elementStun": "@integer@"
+}

@@ -3,9 +3,9 @@
 namespace App\Synchronizer;
 
 use App\Entity\Item;
-use App\Enum\Item\ItemSelector;
 use App\Enum\Item\ItemType;
 use App\Model\Crawler\BaseCrawler;
+use App\Synchronizer\Enum\ItemSelector;
 use App\Utils\CrawlerUtils;
 use App\Utils\Utils;
 
@@ -32,7 +32,7 @@ class ItemSynchronizer extends AbstractSynchronizer
         $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->value);
         $crawler = new BaseCrawler($url);
 
-        $nodes = $crawler->findNodesBySelector(ItemSelector::ITEM_LIST_DIV->value);
+        $nodes = $crawler->findNodesBySelector(ItemSelector::LIST_DIV->value);
         $crawler->clear();
 
         foreach ($nodes as $i => $node) {
@@ -51,7 +51,8 @@ class ItemSynchronizer extends AbstractSynchronizer
 
     private function synchronizeItem(\DOMNode $node, ItemType $type): void
     {
-        $a = CrawlerUtils::findChildByName($node, 'a');
+        $crawler = new BaseCrawler($node);
+        $a = $crawler->findCurrentNodeBySelector(ItemSelector::LIST_A->value);
         if (null === $a) {
             return; // unprocessable
         }
@@ -61,22 +62,21 @@ class ItemSynchronizer extends AbstractSynchronizer
             return; // unprocessable
         }
 
-        $crawler = new BaseCrawler($href);
-        $titleH1 = $crawler->findNodeBySelector(ItemSelector::ITEM_DETAIL_TITLE_H1->value);
-        $descriptionP = $crawler->findNodeBySelector(ItemSelector::ITEM_DETAIL_DESCRIPTION_P->value);
+        $iconImg = $crawler->findCurrentNodeBySelector(ItemSelector::LIST_IMG->value);
+        $crawler->clear();
 
-        if (null === $titleH1 || null === $descriptionP) {
+        $crawler = new BaseCrawler($href);
+        $titleH1 = $crawler->findCurrentNodeBySelector(ItemSelector::DETAIL_TITLE_H1->value);
+        $descriptionP = $crawler->findCurrentNodeBySelector(ItemSelector::DETAIL_DESCRIPTION_P->value);
+
+        if (null === $titleH1?->textContent) {
             return; // unprocessable
         }
-
-        $crawler = new BaseCrawler($node);
-        $iconImg = $crawler->findNodeBySelector(ItemSelector::ITEM_LIST_IMG->value);
-        $crawler->clear();
 
         $item = new Item();
         $item->setType($type);
         $item->setName(Utils::cleanString($titleH1->textContent));
-        $item->setDescription(Utils::cleanString($descriptionP->textContent));
+        $item->setDescription($descriptionP ? Utils::cleanString($descriptionP->textContent) : null);
         $item->setImageUrl($iconImg ? CrawlerUtils::findAttributeByName($iconImg, 'src') : null);
 
         $this->em()->persist($item);

@@ -1,0 +1,9 @@
+{
+  "@context": "/api/contexts/MonsterBodyPart",
+  "@id": "@string@",
+  "@type": "MonsterBodyPart",
+  "id": "@string@",
+  "hp": "@integer@",
+  "extract": "red||white||orange||green",
+  "weaknesses": "@array@"
+}

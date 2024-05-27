@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Synchronizer\ItemSynchronizer;
+use App\Synchronizer\MonsterSynchronizer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -19,7 +20,8 @@ class SynchronizeCommand extends Command
 
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly ItemSynchronizer $itemSynchronizer // FIXME use tags
+        private readonly ItemSynchronizer $itemSynchronizer,
+        private readonly MonsterSynchronizer $monsterSynchronizer
     ) {
         parent::__construct(self::NAME);
     }
@@ -28,10 +30,12 @@ class SynchronizeCommand extends Command
     {
         try {
             $this->itemSynchronizer->synchronize();
+            $this->monsterSynchronizer->synchronize();
 
             return Command::SUCCESS;
         } catch (\Throwable $e) {
             $this->logger->critical($e->getMessage());
+            $this->logger->critical($e->getTraceAsString());
 
             return Command::FAILURE;
         }
