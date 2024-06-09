@@ -2,12 +2,14 @@
 
 namespace App\Api\Transformer\Monster;
 
-use App\Api\Contract\ApiTransformer;
 use App\Api\Resource\Monster\MonsterBodyPartApi;
-use App\Api\Resource\Monster\MonsterBodyPartWeaknessApi;
+use App\Api\Transformer\AbstractTransformer;
 use App\Entity\Monster\MonsterBodyPart;
 
-final class MonsterBodyPartApiTransformer implements ApiTransformer
+/**
+ * @method array<int, MonsterBodyPartApi> transformAll(iterable $entities)
+ */
+final class MonsterBodyPartApiTransformer extends AbstractTransformer
 {
     public function __construct(
         private readonly MonsterBodyPartWeaknessApiTransformer $bodyPartWeaknessApiTransformer
@@ -25,12 +27,7 @@ final class MonsterBodyPartApiTransformer implements ApiTransformer
         $resource->extract = $entity->getExtract();
 
         // Collection
-        foreach ($entity->getWeaknesses() as $_weakness) {
-            $weakness = $this->bodyPartWeaknessApiTransformer->transform($_weakness);
-            if ($weakness instanceof MonsterBodyPartWeaknessApi) {
-                $resource->weaknesses[] = $weakness;
-            }
-        }
+        $resource->weaknesses = $this->bodyPartWeaknessApiTransformer->transformAll($entity->getWeaknesses());
 
         // Mapping
         $resource->part = $entity;

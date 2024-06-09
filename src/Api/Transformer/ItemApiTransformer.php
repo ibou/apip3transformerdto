@@ -2,12 +2,17 @@
 
 namespace App\Api\Transformer;
 
-use App\Api\Contract\ApiTransformer;
 use App\Api\Resource\ItemApi;
 use App\Entity\Item;
 
-final class ItemApiTransformer implements ApiTransformer
+/**
+ * @method array<int, ItemApi> transformAll(iterable $entities)
+ */
+final class ItemApiTransformer extends AbstractTransformer
 {
+    /**
+     * @return ItemApi
+     */
     public function transform(object $source): object
     {
         /** @var Item $entity */

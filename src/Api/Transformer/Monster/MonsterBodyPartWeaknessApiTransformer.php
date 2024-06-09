@@ -2,11 +2,14 @@
 
 namespace App\Api\Transformer\Monster;
 
-use App\Api\Contract\ApiTransformer;
 use App\Api\Resource\Monster\MonsterBodyPartWeaknessApi;
+use App\Api\Transformer\AbstractTransformer;
 use App\Entity\Monster\MonsterBodyPartWeakness;
 
-final class MonsterBodyPartWeaknessApiTransformer implements ApiTransformer
+/**
+ * @method array<int, MonsterBodyPartWeaknessApi> transformAll(iterable $entities)
+ */
+final class MonsterBodyPartWeaknessApiTransformer extends AbstractTransformer
 {
     public function transform(object $source): MonsterBodyPartWeaknessApi
     {

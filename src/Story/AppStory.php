@@ -6,13 +6,15 @@ namespace App\Story;
 
 use App\Factory\ItemFactory;
 use App\Factory\Monster\MonsterFactory;
+use App\Factory\Quest\QuestFactory;
 use Zenstruck\Foundry\Story;
 
 final class AppStory extends Story
 {
     public function build(): void
     {
-        ItemFactory::createMany(500);
-        MonsterFactory::createMany(50);
+        ItemFactory::createMany(100);
+        MonsterFactory::createMany(25);
+        QuestFactory::createMany(10);
     }
 }

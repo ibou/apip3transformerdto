@@ -1,9 +1,9 @@
 {
   "@context": "/api/contexts/MonsterBodyPart",
-  "@id": "@string@",
+  "@id": "@string@.contains('/api/monsters/').contains('/body_parts/')",
   "@type": "MonsterBodyPart",
-  "id": "@string@",
+  "id": "@uuid@",
   "hp": "@integer@",
   "extract": "red||white||orange||green",
-  "weaknesses": "@array@"
+  "weaknesses": "@string@"
 }

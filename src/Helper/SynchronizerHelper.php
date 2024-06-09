@@ -2,7 +2,9 @@
 
 namespace App\Helper;
 
+use Doctrine\DBAL\Logging\Middleware;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\NullLogger;
 
 readonly class SynchronizerHelper
 {
@@ -12,7 +14,8 @@ readonly class SynchronizerHelper
 
     public function disableSQLLog(): void
     {
-        $this->em->getConnection()->getConfiguration()->setMiddlewares([]);
+        $middlewares = new Middleware(new NullLogger());
+        $this->em->getConnection()->getConfiguration()->setMiddlewares([$middlewares]);
     }
 
     public function cleanEntitiesData(string ...$fqcns): void
@@ -28,5 +31,19 @@ readonly class SynchronizerHelper
             ->delete($fqcn, 'e')
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function transformMonsterAttributeHps(string $value): array
+    {
+        $values = [];
+        foreach (\explode("\n", $value) as $line) {
+            $value = \trim(\str_replace('HP', '', $line));
+            $values[] = $value;
+        }
+
+        return $values;
     }
 }

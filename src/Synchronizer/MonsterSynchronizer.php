@@ -26,7 +26,7 @@ class MonsterSynchronizer extends AbstractSynchronizer
     {
         $this->ping();
         $this->helper()->disableSQLLog();
-        $this->helper()->cleanEntitiesData(
+        $this->helper()->cleanEntitiesData( // FIXME cascade
             MonsterAilmentEffectiveness::class,
             MonsterBodyPartWeakness::class,
             MonsterBodyPart::class,
@@ -41,7 +41,7 @@ class MonsterSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(MonsterType $type): void
     {
-        $this->logger()->debug(\sprintf('>>> start sync %s', \strtolower($type->label())));
+        $this->logger()->debug(\sprintf('>>> Monster : start sync %s', \strtolower($type->label())));
 
         $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->value);
         $crawler = new BaseCrawler($url);
@@ -298,14 +298,13 @@ class MonsterSynchronizer extends AbstractSynchronizer
             $value = Utils::cleanString($childNode->textContent);
 
             if (0 === $key) {
-                $item = $this->getCache()->findItem($value);
-
+                $item = $this->cache()->findItem($value);
                 if (null === $item) {
                     return; // unprocessable
                 }
 
                 $monsterItem->setItem($item)->setMonster($monster);
-                $monster->addMonsterItem($monsterItem);
+                $monster->addItem($monsterItem);
             }
 
             match ($key) {

@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use App\Api\Resource\ItemApi;
 use App\Api\State\EntityStateProvider;
 use App\Entity\Monster\Monster;
 use App\Entity\Monster\MonsterItem;
@@ -44,6 +45,8 @@ class MonsterItemApi
     #[ApiProperty(identifier: true)]
     public ?Uuid $id = null;
 
+    public ?ItemApi $item = null;
+
     public ?QuestRank $questRank = null;
 
     public ?ItemDropMethod $method = null;
@@ -53,7 +56,7 @@ class MonsterItemApi
     public ?int $rate = null;
 
     #[Ignore]
-    public ?MonsterItem $item = null;
+    public ?MonsterItem $_item = null;
 
     #[Ignore]
     public ?Monster $monster = null;

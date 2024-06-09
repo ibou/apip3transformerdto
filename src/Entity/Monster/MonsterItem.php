@@ -14,11 +14,11 @@ class MonsterItem
 {
     use IdTrait;
 
-    #[ORM\ManyToOne(inversedBy: 'monsterItems')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Item $item = null;
 
-    #[ORM\ManyToOne(inversedBy: 'monsterItems')]
+    #[ORM\ManyToOne(inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Monster $monster = null;
 

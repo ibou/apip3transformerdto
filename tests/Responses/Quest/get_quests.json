@@ -1,0 +1,34 @@
+{
+  "@context": "/api/contexts/Quest",
+  "@id": "/api/quests",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/quests/')",
+      "@type": "Quest",
+      "id": "@uuid@",
+      "type": "event||anomaly||follower_collab||hub_master||hub_high||hub_low||village||arena||training",
+      "name": "@string@",
+      "client": {
+        "@id": "@string@",
+        "@type": "Client",
+        "id": "@uuid@",
+        "name": "@string@"
+      },
+      "description": "@string@",
+      "objective": "@string@",
+      "failureConditions": "@string@",
+      "monsters": "@string@",
+      "items": "@string@"
+    },
+    "@...@"
+  ],
+  "hydra:view": {
+    "@id": "/api/quests?page=1",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "/api/quests?page=1",
+    "hydra:last": "@string@",
+    "hydra:next": "@string@"
+  }
+  }

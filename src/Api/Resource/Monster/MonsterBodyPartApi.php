@@ -48,6 +48,7 @@ class MonsterBodyPartApi
     public ?Extract $extract = null;
 
     /** @var list<MonsterBodyPartWeaknessApi> */
+    #[ApiProperty(readableLink: false, uriTemplate: '/monsters/{monster_id}/body_parts/{part_id}/weaknesses')]
     public array $weaknesses = [];
 
     #[Ignore]

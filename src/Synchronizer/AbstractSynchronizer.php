@@ -39,7 +39,7 @@ abstract class AbstractSynchronizer
         return $this->helper;
     }
 
-    protected function getCache(): Cache
+    protected function cache(): Cache
     {
         return $this->cache;
     }
@@ -52,8 +52,11 @@ abstract class AbstractSynchronizer
     protected function flushAndClear(): void
     {
         $this->em->flush();
+
         $this->em->clear();
-        $this->cache->clear();
+        $this->cache()->clear();
+
+        gc_collect_cycles();
     }
 
     protected function ping(): void

@@ -1,11 +1,13 @@
 {
   "@context": "/api/contexts/Monster",
-  "@id": "@string@",
+  "@id": "@string@.contains('/api/monsters/')",
   "@type": "Monster",
-  "id": "@string@",
+  "id": "@uuid@",
   "type": "lg||sm",
   "name": "@string@",
   "description": "@string@",
   "imageUrl": "@string@.isUrl()",
-  "bodyParts": "@array@"
+  "bodyParts": "@string@",
+  "ailmentsEffectiveness": "@string@.contains('/api/monsters/').contains('/ailments_effectiveness')",
+  "items": "@string@"
 }

@@ -1,0 +1,17 @@
+{
+  "@context": "/api/contexts/QuestItem",
+  "@id": "@string@.contains('/api/quests').contains('/items')",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/quests').contains('/items/')",
+      "@type": "QuestItem",
+      "id": "@uuid@",
+      "type": "reward||supply_box",
+      "quantity": "@integer@",
+      "percentChance": "@integer@"
+    },
+    "@...@"
+  ]
+}

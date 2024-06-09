@@ -1,0 +1,19 @@
+{
+  "@context": "/api/contexts/Quest",
+  "@id": "@string@.contains('/api/quests/')",
+  "@type": "Quest",
+  "id": "@uuid@",
+  "type": "event||anomaly||follower_collab||hub_master||hub_high||hub_low||village||arena||training",
+  "name": "@string@",
+  "client": {
+    "@id": "@string@.contains('/api/clients/')",
+    "@type": "Client",
+    "id": "@uuid@",
+    "name": "@string@"
+  },
+  "description": "@string@",
+  "objective": "@string@",
+  "failureConditions": "@string@",
+  "monsters": "@string@",
+  "items": "@string@"
+}

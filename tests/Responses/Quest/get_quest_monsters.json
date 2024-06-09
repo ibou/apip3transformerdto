@@ -1,0 +1,17 @@
+{
+  "@context": "/api/contexts/QuestMonster",
+  "@id": "@string@.contains('/api/quests/').contains('/monsters')",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/quests/').contains('/monsters/')",
+      "@type": "QuestMonster",
+      "id": "@uuid@",
+      "attributes": "@string@.contains('/api/quests/').contains('/monsters/').contains('/attributes')",
+      "sizes": "@string@.contains('/api/quests/').contains('/monsters/').contains('/sizes')",
+      "areas": "@string@.contains('/api/quests/').contains('/monsters/').contains('/areas')"
+    },
+    "@...@"
+  ]
+}

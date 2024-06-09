@@ -1,13 +1,13 @@
 {
   "@context": "/api/contexts/MonsterAilmentEffectiveness",
-  "@id": "@string@",
+  "@id": "@string@.contains('/api/monsters/').contains('/ailments_effectiveness')",
   "@type": "hydra:Collection",
   "hydra:totalItems": "@integer@",
   "hydra:member": [
     {
-      "@id": "@string@",
+      "@id": "@string@.contains('/api/monsters/').contains('/ailments_effectiveness/')",
       "@type": "MonsterAilmentEffectiveness",
-      "id": "@string@",
+      "id": "@uuid@",
       "buildup": "@string@",
       "decay": "@string@",
       "damage": "@integer@",

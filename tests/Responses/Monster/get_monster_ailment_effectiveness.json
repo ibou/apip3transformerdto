@@ -1,8 +1,8 @@
 {
   "@context": "/api/contexts/MonsterAilmentEffectiveness",
-  "@id": "@string@",
+  "@id": "@string@.contains('/api/monsters/').contains('/ailments_effectiveness')",
   "@type": "MonsterAilmentEffectiveness",
-  "id": "@string@",
+  "id": "@uuid@",
   "builder": "@string@",
   "decay": "@string@",
   "damage": "@integer@",

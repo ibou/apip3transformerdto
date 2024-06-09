@@ -50,13 +50,13 @@ class Monster
      * @var ArrayCollection<int, MonsterItem>
      */
     #[ORM\OneToMany(mappedBy: 'monster', targetEntity: MonsterItem::class, cascade: ['ALL'], orphanRemoval: true)]
-    private Collection $monsterItems;
+    private Collection $items;
 
     public function __construct()
     {
         $this->bodyParts = new ArrayCollection();
         $this->ailmentsEffectiveness = new ArrayCollection();
-        $this->monsterItems = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
 
     public function getType(): ?MonsterType
@@ -184,35 +184,27 @@ class Monster
     /**
      * @return Collection<int, MonsterItem>
      */
-    public function getMonsterItems(): Collection
+    public function getItems(): Collection
     {
-        return $this->monsterItems;
+        return $this->items;
     }
 
-    public function findMonsterItemByName(string $name): ?MonsterItem
+    public function addItem(MonsterItem $item): static
     {
-        $criteria = new Criteria();
-        $criteria->where(Criteria::expr()->eq('item.name', $name));
-
-        return $this->monsterItems->matching($criteria)->first() ?: null;
-    }
-
-    public function addMonsterItem(MonsterItem $monsterItem): static
-    {
-        if (!$this->monsterItems->contains($monsterItem)) {
-            $this->monsterItems->add($monsterItem);
-            $monsterItem->setMonster($this);
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
+            $item->setMonster($this);
         }
 
         return $this;
     }
 
-    public function removeMonsterItem(MonsterItem $monsterItem): static
+    public function removeItem(MonsterItem $item): static
     {
-        if ($this->monsterItems->removeElement($monsterItem)) {
+        if ($this->items->removeElement($item)) {
             // set the owning side to null (unless already changed)
-            if ($monsterItem->getMonster() === $this) {
-                $monsterItem->setMonster(null);
+            if ($item->getMonster() === $this) {
+                $item->setMonster(null);
             }
         }
 

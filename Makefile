@@ -103,3 +103,12 @@ importmap-install:
 
 compile-asset:
 	@$(SYMFONY) asset-map:compile
+
+
+## —— App ———————————————————————————————————————————————————————————————————
+
+sync-dev:
+	@$(SYMFONY) app:sync -vvv
+
+sync:
+	@$(SYMFONY) app:sync -vv --no-debug --env=prod # --no-debug AND --env=prod is for performance

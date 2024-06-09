@@ -1,8 +1,8 @@
 {
   "@context": "/api/contexts/Item",
-  "@id": "@string@",
+  "@id": "@string@.contains('/api/items/')",
   "@type": "Item",
-  "id": "@string@",
+  "id": "@uuid@",
   "type": "consume||material||scrap||ammo||account||antique",
   "name": "@string@",
   "description": "@string@",

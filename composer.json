@@ -61,6 +61,7 @@
         "symfony/debug-bundle": "7.0.*",
         "symfony/maker-bundle": "^1.59",
         "symfony/phpunit-bridge": "^6.3",
+        "symfony/profiler-pack": "*",
         "symfony/stopwatch": "7.0.*",
         "symfony/web-profiler-bundle": "7.0.*",
         "vimeo/psalm": "^5.4",

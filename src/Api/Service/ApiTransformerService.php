@@ -2,16 +2,16 @@
 
 namespace App\Api\Service;
 
-use App\Api\Contract\ApiTransformer;
+use App\Api\Transformer\AbstractTransformer;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
 class ApiTransformerService
 {
-    /** @var ApiTransformer[] */
+    /** @var AbstractTransformer[] */
     private iterable $transformers;
 
     /**
-     * @param ApiTransformer[] $transformers
+     * @param AbstractTransformer[] $transformers
      */
     public function __construct(#[TaggedIterator('api.transformer')] iterable $transformers)
     {

@@ -118,7 +118,7 @@ class MonsterTest extends BaseJsonApiTestCase
     {
         /** @var Monster $monster */
         $monster = MonsterFactory::createOne()->object();
-        if (null === $item = $monster->getMonsterItems()->first() ?: null) {
+        if (null === $item = $monster->getItems()->first() ?: null) {
             $item = MonsterItemFactory::createOne(['monster' => $monster]);
         }
 

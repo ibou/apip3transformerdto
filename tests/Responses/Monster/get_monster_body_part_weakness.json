@@ -1,8 +1,8 @@
 {
   "@context": "/api/contexts/MonsterBodyPartWeakness",
-  "@id": "@string@",
+  "@id": "@string@.contains('/api/monsters/').contains('/body_parts').contains('/weaknesses/')",
   "@type": "MonsterBodyPartWeakness",
-  "id": "@string@",
+  "id": "@uuid@",
   "state": "@integer@",
   "hitSlash": "@integer@",
   "hitStrike": "@integer@",

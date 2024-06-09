@@ -10,7 +10,6 @@ use ApiPlatform\Metadata\GetCollection;
 use App\Api\State\EntityStateProvider;
 use App\Entity\Item;
 use App\Enum\Item\ItemType;
-use AutoMapper\Attribute as Mapper;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Uid\Uuid;
 
@@ -23,7 +22,6 @@ use Symfony\Component\Uid\Uuid;
     provider: EntityStateProvider::class,
     stateOptions: new Options(entityClass: Item::class)
 )]
-#[Mapper\Mapper(source: [Item::class, 'array'])]
 class ItemApi
 {
     #[ApiProperty(identifier: true)]

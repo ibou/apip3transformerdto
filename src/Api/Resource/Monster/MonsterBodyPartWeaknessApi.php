@@ -19,15 +19,15 @@ use Symfony\Component\Uid\Uuid;
     shortName: 'MonsterBodyPartWeakness',
     operations: [
         new GetCollection(
-            uriTemplate: self::AS_MONSTER_SUBRESOURCE,
+            uriTemplate: self::AS_MONSTER_BODY_PART_SUBRESOURCE,
             uriVariables: [
                 'monster_id' => new Link(toProperty: 'monster', fromClass: Monster::class),
                 'part_id' => new Link(toProperty: 'part', fromClass: MonsterBodyPart::class),
             ],
-            itemUriTemplate: self::AS_MONSTER_SUBRESOURCE.'/{id}'
+            itemUriTemplate: self::AS_MONSTER_BODY_PART_SUBRESOURCE.'/{id}'
         ),
         new Get(
-            uriTemplate: self::AS_MONSTER_SUBRESOURCE.'/{id}',
+            uriTemplate: self::AS_MONSTER_BODY_PART_SUBRESOURCE.'/{id}',
             uriVariables: [
                 'monster_id' => new Link(toProperty: 'monster', fromClass: Monster::class),
                 'part_id' => new Link(toProperty: 'part', fromClass: MonsterBodyPart::class),
@@ -40,7 +40,7 @@ use Symfony\Component\Uid\Uuid;
 )]
 class MonsterBodyPartWeaknessApi
 {
-    private const string AS_MONSTER_SUBRESOURCE = '/monsters/{monster_id}/body_parts/{part_id}/weaknesses';
+    private const string AS_MONSTER_BODY_PART_SUBRESOURCE = '/monsters/{monster_id}/body_parts/{part_id}/weaknesses';
 
     #[ApiProperty(identifier: true)]
     public ?Uuid $id = null;

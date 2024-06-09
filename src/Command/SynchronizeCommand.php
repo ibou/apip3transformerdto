@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Synchronizer\ItemSynchronizer;
 use App\Synchronizer\MonsterSynchronizer;
+use App\Synchronizer\QuestSynchronizer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,7 +22,8 @@ class SynchronizeCommand extends Command
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly ItemSynchronizer $itemSynchronizer,
-        private readonly MonsterSynchronizer $monsterSynchronizer
+        private readonly MonsterSynchronizer $monsterSynchronizer,
+        private readonly QuestSynchronizer $questSynchronizer
     ) {
         parent::__construct(self::NAME);
     }
@@ -31,6 +33,7 @@ class SynchronizeCommand extends Command
         try {
             $this->itemSynchronizer->synchronize();
             $this->monsterSynchronizer->synchronize();
+            $this->questSynchronizer->synchronize();
 
             return Command::SUCCESS;
         } catch (\Throwable $e) {

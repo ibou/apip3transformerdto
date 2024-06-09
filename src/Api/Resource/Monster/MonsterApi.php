@@ -36,7 +36,16 @@ class MonsterApi
     public ?string $imageUrl = null;
 
     /** @var list<MonsterBodyPartApi> */
+    #[ApiProperty(readableLink: false, uriTemplate: '/monsters/{monster_id}/body_parts')]
     public array $bodyParts = [];
+
+    /** @var list<MonsterAilmentEffectivenessApi> */
+    #[ApiProperty(readableLink: false, uriTemplate: '/monsters/{monster_id}/ailments_effectiveness')]
+    public array $ailmentsEffectiveness = [];
+
+    /** @var list<MonsterItemApi> */
+    #[ApiProperty(readableLink: false, uriTemplate: '/monsters/{monster_id}/items')]
+    public array $items = [];
 
     #[Ignore]
     public ?Monster $monster = null;

@@ -2,15 +2,19 @@
 
 namespace App\Api\Transformer\Monster;
 
-use App\Api\Contract\ApiTransformer;
 use App\Api\Resource\Monster\MonsterApi;
-use App\Api\Resource\Monster\MonsterBodyPartApi;
+use App\Api\Transformer\AbstractTransformer;
 use App\Entity\Monster\Monster;
 
-final class MonsterApiTransformer implements ApiTransformer
+/**
+ * @method array<int, MonsterApi> transformAll(iterable $entities)
+ */
+final class MonsterApiTransformer extends AbstractTransformer
 {
     public function __construct(
-        private readonly MonsterBodyPartApiTransformer $bodyPartApiTransformer
+        private readonly MonsterBodyPartApiTransformer $bodyPartApiTransformer,
+        private readonly MonsterItemApiTransformer $monsterItemApiTransformer,
+        private readonly MonsterAilmentEffectivenessApiTransformer $monsterAilmentEffectivenessApiTransformer
     ) {
     }
 
@@ -27,12 +31,10 @@ final class MonsterApiTransformer implements ApiTransformer
         $resource->imageUrl = $entity->getImageUrl();
 
         // Collections
-        foreach ($entity->getBodyParts() as $_part) {
-            $part = $this->bodyPartApiTransformer->transform($_part);
-            if ($part instanceof MonsterBodyPartApi) {
-                $resource->bodyParts[] = $part;
-            }
-        }
+        $resource->bodyParts = $this->bodyPartApiTransformer->transformAll($entity->getBodyParts());
+        $resource->ailmentsEffectiveness = $this->monsterAilmentEffectivenessApiTransformer
+            ->transformAll($entity->getAilmentsEffectiveness());
+        $resource->items = $this->monsterItemApiTransformer->transformAll($entity->getItems());
 
         // Mapping
         $resource->monster = $entity;

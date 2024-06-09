@@ -1,0 +1,16 @@
+{
+  "@context": "/api/contexts/QuestMonsterArea",
+  "@id": "@string@.contains('/api/quests').contains('/monsters').contains('/areas')",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/quests').contains('/monsters').contains('/areas/')",
+      "@type": "QuestMonsterArea",
+      "id": "@uuid@",
+      "numero": "@integer@",
+      "percentChance": "@integer@"
+    },
+    "@...@"
+  ]
+}

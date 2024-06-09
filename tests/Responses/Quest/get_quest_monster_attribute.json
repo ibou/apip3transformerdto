@@ -1,0 +1,15 @@
+{
+  "@context": "/api/contexts/QuestMonsterAttribute",
+  "@id": "@string@.contains('/api/quests').contains('/monsters').contains('/attributes/')",
+  "@type": "QuestMonsterAttribute",
+  "id": "@uuid@",
+  "nbPlayers": "@integer@",
+  "hps": "@array@",
+  "attack": "@string@",
+  "parts": "@string@",
+  "defense": "@integer@",
+  "ailment": "@string@",
+  "stun": "@string@",
+  "stamina": "@string@",
+  "mount": "@string@"
+}
