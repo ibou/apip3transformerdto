@@ -10,8 +10,15 @@ class BaseCrawler
 
     public function __construct(string|\DOMNode $node)
     {
+        $context = stream_context_create([ // FIXME à creuser si OK
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ],
+        ]);
+
         if (\is_string($node)) {
-            $node = \file_get_contents($node) ?: null;
+            $node = @\file_get_contents($node, false, $context) ?: null;
         }
 
         $this->crawler = new Crawler($node);

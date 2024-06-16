@@ -41,7 +41,7 @@ class MonsterSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(MonsterType $type): void
     {
-        $this->logger()->debug(\sprintf('>>> Monster : start sync %s', \strtolower($type->label())));
+        $this->logger()->debug(\sprintf('>>> Monster : start sync "%s"', $type->label()));
 
         $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->value);
         $crawler = new BaseCrawler($url);
@@ -322,5 +322,10 @@ class MonsterSynchronizer extends AbstractSynchronizer
     private function getListUrl(): string
     {
         return \sprintf('%s/%s', $this->getKiranicoUrl(), self::ITEMS_LIST_PATH);
+    }
+
+    public static function getDefaultPriority(): int
+    {
+        return 90;
     }
 }

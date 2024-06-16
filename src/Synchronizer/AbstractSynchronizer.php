@@ -72,4 +72,6 @@ abstract class AbstractSynchronizer
             throw $e;
         }
     }
+
+    abstract public static function getDefaultPriority(): int;
 }

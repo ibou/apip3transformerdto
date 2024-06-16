@@ -19,8 +19,8 @@
       "description": "@string@",
       "objective": "@string@",
       "failureConditions": "@string@",
-      "monsters": "@string@",
-      "items": "@string@"
+      "monsters": "@string@.contains('/api/quests').contains('/monsters')",
+      "items": "@string@.contains('/api/quests').contains('/items')"
     },
     "@...@"
   ],
@@ -28,7 +28,7 @@
     "@id": "/api/quests?page=1",
     "@type": "hydra:PartialCollectionView",
     "hydra:first": "/api/quests?page=1",
-    "hydra:last": "@string@",
-    "hydra:next": "@string@"
+    "hydra:last": "@string@.contains('/api/quests').contains('?page=')",
+    "hydra:next": "@string@.contains('/api/quests').contains('?page=2')"
   }
   }

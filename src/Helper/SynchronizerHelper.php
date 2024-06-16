@@ -46,4 +46,16 @@ readonly class SynchronizerHelper
 
         return $values;
     }
+
+    public function getWeaponSlotQuantityFromImageSrc(string $src): ?int
+    {
+        return match (true) {
+            \str_contains($src, 'deco0') => 0,
+            \str_contains($src, 'deco1') => 1,
+            \str_contains($src, 'deco2') => 2,
+            \str_contains($src, 'deco3') => 3,
+            \str_contains($src, 'deco4') => 4,
+            default => null
+        };
+    }
 }

@@ -13,8 +13,8 @@
       "description": "@string@",
       "imageUrl": "@string@.isUrl()",
       "bodyParts": "@string@",
-      "ailmentsEffectiveness": "@string@",
-      "items": "@string@"
+      "ailmentsEffectiveness": "@string@.contains('/api/monsters').contains('/ailments_effectiveness')",
+      "items": "@string@.contains('/api/monsters').contains('/items')"
     },
     "@...@"
   ],
@@ -22,7 +22,7 @@
     "@id": "/api/monsters?page=1",
     "@type": "hydra:PartialCollectionView",
     "hydra:first": "/api/monsters?page=1",
-    "hydra:last": "@string@",
-    "hydra:next": "@string@"
+    "hydra:last": "@string@.contains('/api/monsters').contains('?page=')",
+    "hydra:next": "@string@.contains('/api/monsters').contains('?page=2')"
   }
   }

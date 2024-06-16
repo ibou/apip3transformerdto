@@ -10,7 +10,7 @@
       "id": "@uuid@",
       "hp": "@integer@",
       "extract": "red||white||orange||green",
-      "weaknesses": "@string@"
+      "weaknesses": "@string@.contains('/api/monsters').contains('/body_parts/').contains('/weaknesses')"
     },
     "@...@"
   ]

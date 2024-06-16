@@ -40,7 +40,7 @@ class QuestSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(QuestType $type): void
     {
-        $this->logger()->debug(\sprintf('>>> Quest : start sync %s', \strtolower($type->label())));
+        $this->logger()->debug(\sprintf('>>> Quest : start sync "%s"', $type->label()));
 
         $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->kiranicoView());
         $crawler = new BaseCrawler($url);
@@ -381,5 +381,10 @@ class QuestSynchronizer extends AbstractSynchronizer
     private function getListUrl(): string
     {
         return \sprintf('%s/%s', $this->getKiranicoUrl(), self::ITEMS_LIST_PATH);
+    }
+
+    public static function getDefaultPriority(): int
+    {
+        return 80;
     }
 }

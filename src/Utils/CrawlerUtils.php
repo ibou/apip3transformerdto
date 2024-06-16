@@ -24,4 +24,22 @@ class CrawlerUtils
     {
         return $node->nodeName === $nodeName;
     }
+
+    public static function findFirstChildOfType(\DOMNode $node, string $nodeName): ?\DOMNode
+    {
+        foreach ($node->childNodes as $child) {
+            if (self::is($child, $nodeName)) {
+                return $child;
+            }
+        }
+
+        return null;
+    }
+
+    public static function hasClass(\DOMNode $node, string $className): bool
+    {
+        $nodeClass = self::findAttributeByName($node, 'class');
+
+        return \str_contains($nodeClass, $className);
+    }
 }

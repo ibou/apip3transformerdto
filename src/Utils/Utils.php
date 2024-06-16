@@ -37,4 +37,9 @@ class Utils
     {
         return preg_replace('!\s+!', ' ', $str) ?? $str;
     }
+
+    public static function reverseNumber(int $number): int
+    {
+        return -$number;
+    }
 }

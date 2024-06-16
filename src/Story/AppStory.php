@@ -7,6 +7,7 @@ namespace App\Story;
 use App\Factory\ItemFactory;
 use App\Factory\Monster\MonsterFactory;
 use App\Factory\Quest\QuestFactory;
+use App\Factory\Weapon\WeaponFactory;
 use Zenstruck\Foundry\Story;
 
 final class AppStory extends Story
@@ -15,6 +16,7 @@ final class AppStory extends Story
     {
         ItemFactory::createMany(100);
         MonsterFactory::createMany(25);
-        QuestFactory::createMany(10);
+        QuestFactory::createMany(50);
+        WeaponFactory::createMany(50);
     }
 }

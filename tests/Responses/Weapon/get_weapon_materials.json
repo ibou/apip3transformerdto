@@ -1,0 +1,17 @@
+{
+  "@context": "/api/contexts/WeaponMaterial",
+  "@id": "@string@.contains('/api/weapons').contains('/materials')",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/weapons').contains('/materials/')",
+      "@type": "WeaponMaterial",
+      "id": "@uuid@",
+      "type": "forging||upgrade",
+      "item": "@string@.contains('/api/items/')",
+      "quantity": "@integer@"
+    },
+    "@...@"
+  ]
+}

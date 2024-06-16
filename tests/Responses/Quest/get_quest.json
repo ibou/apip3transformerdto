@@ -14,6 +14,6 @@
   "description": "@string@",
   "objective": "@string@",
   "failureConditions": "@string@",
-  "monsters": "@string@",
-  "items": "@string@"
+  "monsters": "@string@.contains('/api/quests').contains('/monsters')",
+  "items": "@string@.contains('/api/quests').contains('/items')"
 }

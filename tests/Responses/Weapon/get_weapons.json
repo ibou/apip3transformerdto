@@ -1,0 +1,32 @@
+{
+  "@context": "/api/contexts/Weapon",
+  "@id": "/api/weapons",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/weapons/')",
+      "@type": "Weapon",
+      "id": "@uuid@",
+      "name": "@string@",
+      "type": "great_sword||sword_and_shield||dual_blades||long_sword||hammer||hunting_horn||lance||gunlance||switch_axe||charge_blade||insect_glaive||bow||heavy_bowgun||light_bowgun",
+      "attack": "@integer@",
+      "defenseBonus": "@integer@",
+      "rarity": "@integer@",
+      "affinity": "@integer@||@null@",
+      "sharpness": "@string@||@null@",
+      "imagesUrls": "@array@",
+      "slots": "@string@.contains('/api/weapons').contains('/slots')",
+      "materials": "@string@.contains('/api/weapons').contains('/materials')",
+      "ailments": "@string@.contains('/api/weapons').contains('/ailments')"
+    },
+    "@...@"
+  ],
+  "hydra:view": {
+    "@id": "@string@.contains('/api/weapons').contains('?page=1')",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "/api/weapons?page=1",
+    "hydra:last": "@string@.contains('/api/weapons').contains('?page=')",
+    "hydra:next": "@string@.contains('/api/weapons').contains('?page=2')"
+  }
+  }

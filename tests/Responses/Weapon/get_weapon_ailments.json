@@ -1,0 +1,16 @@
+{
+  "@context": "/api/contexts/WeaponAilment",
+  "@id": "@string@.contains('/api/weapons').contains('/ailments')",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/weapons').contains('/ailments/')",
+      "@type": "WeaponAilment",
+      "id": "@uuid@",
+      "ailment": "poison||paralysis||sleep||stun||blast||exhaust||fireblight||waterblight||iceblight||thunderblight||dragonblight",
+      "value": "@integer@"
+    },
+    "@...@"
+  ]
+}

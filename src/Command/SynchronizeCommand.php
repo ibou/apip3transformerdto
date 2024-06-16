@@ -2,14 +2,14 @@
 
 namespace App\Command;
 
-use App\Synchronizer\ItemSynchronizer;
-use App\Synchronizer\MonsterSynchronizer;
-use App\Synchronizer\QuestSynchronizer;
+use App\Synchronizer\AbstractSynchronizer;
+use App\Synchronizer\WeaponSynchronizer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
 #[AsCommand(
     name: self::NAME,
@@ -21,9 +21,8 @@ class SynchronizeCommand extends Command
 
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly ItemSynchronizer $itemSynchronizer,
-        private readonly MonsterSynchronizer $monsterSynchronizer,
-        private readonly QuestSynchronizer $questSynchronizer
+        /** @var list<AbstractSynchronizer> $synchronizers */
+        #[TaggedIterator('app.synchronizer')] private readonly iterable $synchronizers
     ) {
         parent::__construct(self::NAME);
     }
@@ -31,9 +30,7 @@ class SynchronizeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $this->itemSynchronizer->synchronize();
-            $this->monsterSynchronizer->synchronize();
-            $this->questSynchronizer->synchronize();
+            $this->synchronize();
 
             return Command::SUCCESS;
         } catch (\Throwable $e) {
@@ -41,6 +38,15 @@ class SynchronizeCommand extends Command
             $this->logger->critical($e->getTraceAsString());
 
             return Command::FAILURE;
+        }
+    }
+
+    private function synchronize(): void
+    {
+        foreach ($this->synchronizers as $synchronizer) {
+            if ($synchronizer instanceof WeaponSynchronizer) {
+                $synchronizer->synchronize();
+            }
         }
     }
 }
