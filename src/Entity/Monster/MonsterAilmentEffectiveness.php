@@ -2,7 +2,7 @@
 
 namespace App\Entity\Monster;
 
-use App\Enum\Ailment;
+use App\Enum\StatusEffect;
 use App\Repository\Monster\MonsterAilmentEffectivenessRepository;
 use App\Trait\IdTrait;
 use Doctrine\DBAL\Types\Types;
@@ -31,16 +31,16 @@ class MonsterAilmentEffectiveness
 
     public function __construct(
         #[ORM\Column(length: 255)]
-        private ?Ailment $ailment = null
+        private ?StatusEffect $ailment = null
     ) {
     }
 
-    public function getAilment(): ?Ailment
+    public function getAilment(): ?StatusEffect
     {
         return $this->ailment;
     }
 
-    public function setAilment(?Ailment $ailment): void
+    public function setAilment(?StatusEffect $ailment): void
     {
         $this->ailment = $ailment;
     }

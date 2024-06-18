@@ -54,9 +54,13 @@ class WeaponApi
     #[ApiProperty(readableLink: false, uriTemplate: '/weapons/{weapon_id}/materials')]
     public array $materials = [];
 
-    /** @var list<WeaponAilmentApi> */
-    #[ApiProperty(readableLink: false, uriTemplate: '/weapons/{weapon_id}/ailments')]
-    public array $ailments = [];
+    /** @var list<WeaponStatusApi> */
+    #[ApiProperty(readableLink: false, uriTemplate: '/weapons/{weapon_id}/statuses')]
+    public array $statuses = [];
+
+    /** @var list<WeaponExtraApi> */
+    #[ApiProperty(readableLink: false, uriTemplate: '/weapons/{weapon_id}/extras')]
+    public array $extras = [];
 
     #[Ignore]
     public ?Weapon $weapon = null;

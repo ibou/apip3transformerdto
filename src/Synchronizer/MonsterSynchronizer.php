@@ -7,10 +7,10 @@ use App\Entity\Monster\MonsterAilmentEffectiveness;
 use App\Entity\Monster\MonsterBodyPart;
 use App\Entity\Monster\MonsterBodyPartWeakness;
 use App\Entity\Monster\MonsterItem;
-use App\Enum\Ailment;
 use App\Enum\Item\ItemDropMethod;
 use App\Enum\Monster\MonsterType;
 use App\Enum\Quest\QuestRank;
+use App\Enum\StatusEffect;
 use App\Enum\Weapon\Extract;
 use App\Model\Crawler\BaseCrawler;
 use App\Synchronizer\Enum\MonsterSelector;
@@ -41,7 +41,7 @@ class MonsterSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(MonsterType $type): void
     {
-        $this->logger()->debug(\sprintf('>>> Monster : start sync "%s"', $type->label()));
+        $this->logger()->info(\sprintf('>>> Monster : start sync "%s"', $type->label()));
 
         $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->value);
         $crawler = new BaseCrawler($url);
@@ -239,7 +239,7 @@ class MonsterSynchronizer extends AbstractSynchronizer
             }
 
             $value = Utils::cleanString($childNode->textContent);
-            $ailment = Ailment::tryFrom(\strtolower($value));
+            $ailment = StatusEffect::tryFrom(\strtolower($value));
             if (0 === $key && null === $ailment) { // part is empty
                 return; // unprocessable
             }

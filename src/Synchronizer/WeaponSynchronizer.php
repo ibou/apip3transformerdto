@@ -3,10 +3,12 @@
 namespace App\Synchronizer;
 
 use App\Entity\Weapon\Weapon;
-use App\Entity\Weapon\WeaponAilment;
+use App\Entity\Weapon\WeaponExtra;
 use App\Entity\Weapon\WeaponMaterial;
 use App\Entity\Weapon\WeaponSlot;
-use App\Enum\Ailment;
+use App\Entity\Weapon\WeaponStatus;
+use App\Enum\StatusEffect;
+use App\Enum\Weapon\WeaponMaterialType;
 use App\Enum\Weapon\WeaponSlotType;
 use App\Enum\Weapon\WeaponType;
 use App\Model\Crawler\BaseCrawler;
@@ -24,9 +26,10 @@ class WeaponSynchronizer extends AbstractSynchronizer
         $this->ping();
         $this->helper()->disableSQLLog();
         $this->helper()->cleanEntitiesData(
+            WeaponExtra::class,
             WeaponMaterial::class,
             WeaponSlot::class,
-            WeaponAilment::class,
+            WeaponStatus::class,
             Weapon::class
         );
 
@@ -37,7 +40,7 @@ class WeaponSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(WeaponType $type): void
     {
-        $this->logger()->debug(\sprintf('>>> Weapon : start sync "%s"', $type->label()));
+        $this->logger()->info(\sprintf('>>> Weapon : start sync "%s"', $type->label()));
 
         $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->kiranicoView());
         $crawler = new BaseCrawler($url);
@@ -82,14 +85,40 @@ class WeaponSynchronizer extends AbstractSynchronizer
         $weapon->setRarity(\intval(\str_replace('Rare ', '', $rarity))); // only in index view
 
         $this->synchronizeName($weapon, $crawler);
+        if (null === $weapon->getName()) {
+            $this->logger()->warning($href);
+            return;
+        }
+
         $this->synchronizeImages($weapon, $crawler);
         $this->synchronizeAttack($weapon, $crawler);
+        $this->synchronizeMaterials($weapon, $crawler);
         $this->synchronizeSlots($weapon, $crawler);
         $this->synchronizeAilments($weapon, $crawler);
 
-        if ($type->withSharpness()) {
+        if ($weapon->getType()->withSharpness()) {
             $this->synchronizeSharpness($weapon, $crawler);
             $this->synchronizeAffinity($weapon, $crawler);
+        }
+
+        if ($weapon->is(WeaponType::HUNTING_HORN)) {
+            $this->synchronizeHuntingHornStatuses($weapon, $crawler);
+        }
+
+        if ($weapon->is(WeaponType::GUNLANCE)) {
+            $this->synchronizeGunlanceExtra($weapon, $crawler);
+        }
+
+        if ($weapon->is(WeaponType::SWITCH_AXE, WeaponType::CHARGE_BLADE, WeaponType::INSECT_GLAIVE)) {
+            $this->synchronizeSwitchAxeChargeBladeInsectGlaiveExtra($weapon, $crawler);
+        }
+
+        if ($weapon->is(WeaponType::BOW)) {
+            $this->synchronizeBowExtra($weapon, $crawler);
+        }
+
+        if ($weapon->is(WeaponType::LIGHT_BOWGUN, WeaponType::HEAVY_BOWGUN)) {
+            $this->synchronizeBowgunExtra($weapon, $crawler);
         }
 
         $this->em()->persist($weapon);
@@ -128,6 +157,61 @@ class WeaponSynchronizer extends AbstractSynchronizer
         $weapon->setAttack(\intval($attack));
     }
 
+    private function synchronizeMaterials(Weapon $weapon, BaseCrawler $crawler): void
+    {
+        $materialsDivs = $crawler->findNodesBySelector(WeaponSelector::DETAIL_MATERIALS_DIV->value);
+
+        /* @var \DOMNode $ailmentSpan */
+        foreach ($materialsDivs as $materialDiv) {
+            $_crawler = new BaseCrawler($materialDiv);
+            $type = Utils::cleanString($_crawler->findCurrentNodeBySelector('h2')?->textContent ?? '');
+            $enum = WeaponMaterialType::tryFromLabel($type);
+
+            if (null === $enum) {
+                continue;
+            }
+
+            $trs = $_crawler->findNodesBySelector('tr');
+            foreach ($trs as $tr) {
+                $this->synchronizeMaterial($weapon, $tr, $enum);
+            }
+        }
+    }
+
+    private function synchronizeMaterial(Weapon $weapon, \DOMNode $node, WeaponMaterialType $type): void
+    {
+        $key = 0;
+        $material = new WeaponMaterial();
+        $material->setType($type);
+
+        /** @var \DOMNode $childNode */
+        foreach ($node->childNodes as $childNode) {
+            if (!CrawlerUtils::is($childNode, 'td')) {
+                continue;
+            }
+
+            $value = Utils::cleanString($childNode->textContent);
+
+            if (0 === $key) {
+                $item = $this->cache()->findItem($value);
+                if (null === $item) {
+                    return; // unprocessable
+                }
+
+                $material->setItem($item);
+            }
+
+            match ($key) {
+                1 => $material->setQuantity(\intval(\str_replace('x', '', $value))),
+                default => null,
+            };
+
+            ++$key;
+        }
+
+        $weapon->addMaterial($material);
+    }
+
     private function synchronizeSlots(Weapon $weapon, BaseCrawler $crawler): void
     {
         $slotsSpans = $crawler->findNodesBySelector(WeaponSelector::DETAIL_SLOTS_SPAN->value);
@@ -162,20 +246,20 @@ class WeaponSynchronizer extends AbstractSynchronizer
         $ailmentsSpan = $crawler->findNodesBySelector(WeaponSelector::DETAIL_AILMENTS_SPAN->value);
         /** @var \DOMNode $ailmentSpan */
         foreach ($ailmentsSpan as $ailmentSpan) {
-            $ailmentValueType = CrawlerUtils::findAttributeByName($ailmentSpan, 'data-value');
-            $ailment = Ailment::tryFromValue(\intval($ailmentValueType));
+            $statusValueType = CrawlerUtils::findAttributeByName($ailmentSpan, 'data-value');
+            $status = StatusEffect::tryFromValue(\intval($statusValueType));
 
             $valueSpan = CrawlerUtils::findFirstChildOfType($ailmentSpan, 'span');
 
-            if (null === $ailmentValueType || null === $valueSpan || null === $ailment) {
+            if (null === $statusValueType || null === $valueSpan || null === $status) {
                 continue; // unprocessable
             }
 
-            $weaponAilment = new WeaponAilment();
-            $weaponAilment->setAilment($ailment);
-            $weaponAilment->setValue(\intval(Utils::cleanString($valueSpan->textContent)));
+            $weaponStatus = new WeaponStatus();
+            $weaponStatus->setStatus($status);
+            $weaponStatus->setValue(\intval(Utils::cleanString($valueSpan->textContent)));
 
-            $weapon->addAilment($weaponAilment);
+            $weapon->addStatus($weaponStatus);
         }
     }
 
@@ -218,7 +302,116 @@ class WeaponSynchronizer extends AbstractSynchronizer
             if (CrawlerUtils::hasClass($valueSpan, 'text-green-600')) {
                 $weapon->setAffinity($value);
             } else {
-                $weapon->setAffinity(-1 * abs($value));
+                $weapon->setAffinity(-1 * \abs($value));
+            }
+        }
+    }
+
+    private function synchronizeHuntingHornStatuses(Weapon $weapon, BaseCrawler $crawler): void
+    {
+        $statusSmall = $crawler->findCurrentNodeBySelector(WeaponSelector::DETAIL_HUNTING_HORN_STATUSES->value);
+        if (null === $statusSmall) {
+            return; // unprocessable
+        }
+
+        /** @var \DOMNode $childNode */
+        foreach ($statusSmall->childNodes as $childNode) {
+            if (!CrawlerUtils::is($childNode, 'div')) {
+                continue;
+            }
+
+            $textContent = Utils::cleanString($childNode->textContent);
+            $enum = StatusEffect::tryFromLabel($textContent);
+            $status = new WeaponStatus();
+            $status->setStatus($enum);
+
+            $weapon->addStatus($status);
+        }
+    }
+
+    private function synchronizeGunlanceExtra(Weapon $weapon, BaseCrawler $crawler): void
+    {
+        $lanceTypeDiv = $crawler->findCurrentNodeBySelector(WeaponSelector::DETAIL_GUNLANCE_TYPE_OR_BOW_COATINGS_DIV->value);
+        if (null === $lanceTypeDiv) {
+            return; // unprocessable
+        }
+
+        $extra = new WeaponExtra();
+        $extra->setName(Utils::cleanString($lanceTypeDiv->textContent));
+        $weapon->addExtra($extra);
+    }
+
+    private function synchronizeSwitchAxeChargeBladeInsectGlaiveExtra(Weapon $weapon, BaseCrawler $crawler): void
+    {
+        $switchAxeExtraDiv = $crawler->findCurrentNodeBySelector(
+            WeaponSelector::DETAIL_SWITCH_AXE_OR_CHARGE_BLADE_INSECT_GLAIVE_EXTRA_DIV->value
+        );
+        if (null === $switchAxeExtraDiv) {
+            return; // unprocessable
+        }
+
+        $extra = new WeaponExtra();
+        $extra->setName(Utils::cleanString($switchAxeExtraDiv->textContent));
+        $weapon->addExtra($extra);
+    }
+
+    private function synchronizeBowExtra(Weapon $weapon, BaseCrawler $crawler): void
+    {
+        $coatingsDivs = $crawler->findNodesBySelector(WeaponSelector::DETAIL_GUNLANCE_TYPE_OR_BOW_COATINGS_DIV->value);
+        foreach ($coatingsDivs as $coatingDiv) {
+            $extra = new WeaponExtra();
+            $extra->setName(Utils::cleanString($coatingDiv->textContent));
+            $extra->setActive(!CrawlerUtils::hasClass($coatingDiv, 'text-gray-400'));
+            $weapon->addExtra($extra);
+        }
+
+        $shotsDivs = $crawler->findNodesBySelector(WeaponSelector::DETAIL_BOW_SHOTS_DIV->value);
+        foreach ($shotsDivs as $shotDiv) {
+            $extra = new WeaponExtra();
+            $extra->setName(Utils::cleanString($shotDiv->textContent));
+            $extra->setActive(!CrawlerUtils::hasClass($shotDiv, 'text-gray-400'));
+            $weapon->addExtra($extra);
+        }
+    }
+
+    private function synchronizeBowgunExtra(Weapon $weapon, BaseCrawler $crawler): void
+    {
+        //        $bowgunsDivs = $crawler->findNodesBySelector(WeaponSelector::DETAIL_BOWGUN_EXTRA_DIV->value);
+        //        foreach ($bowgunsDivs as $bowgunDiv) {
+        //            $extra = new WeaponExtra();
+        //            $extra->setName(Utils::replaceMultipleSpacesByOne(Utils::cleanString($bowgunDiv->textContent)));
+        //            $weapon->addExtra($extra);
+        //        }
+
+        $bowgunsAmmoTrs = $crawler->findNodesBySelector(WeaponSelector::DETAIL_BOWGUN_AMMO_EXTRA_TR->value);
+        /** @var \DOMNode $bowgunAmmoTr */
+        foreach ($bowgunsAmmoTrs as $bowgunAmmoTr) {
+            $name = null;
+            $key = 0;
+
+            /** @var \DOMNode $child */
+            foreach ($bowgunAmmoTr->childNodes as $child) {
+                if (!CrawlerUtils::is($child, 'td')) {
+                    continue;
+                }
+
+                $value = Utils::cleanString($child->textContent);
+
+                if (0 === $key) {
+                    $name = $value;
+                    ++$key;
+
+                    continue;
+                }
+
+                $extra = new WeaponExtra();
+                $extra->setName(\sprintf('%s %s', $name, $key));
+                $extra->setValue(\intval($value));
+                $extra->setActive(!CrawlerUtils::hasClass($child, 'text-gray-400'));
+
+                $weapon->addExtra($extra);
+
+                ++$key;
             }
         }
     }

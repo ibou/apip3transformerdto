@@ -1,8 +1,0 @@
-{
-  "@context": "/api/contexts/WeaponAilment",
-  "@id": "@string@.contains('/api/weapons').contains('/ailments/')",
-  "@type": "WeaponAilment",
-  "id": "@uuid@",
-  "ailment": "poison||paralysis||sleep||stun||blast||exhaust||fireblight||waterblight||iceblight||thunderblight||dragonblight",
-  "value": "@integer@"
-}

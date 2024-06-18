@@ -2,8 +2,8 @@
 
 namespace App\Entity\Monster;
 
-use App\Enum\Ailment;
 use App\Enum\Monster\MonsterType;
+use App\Enum\StatusEffect;
 use App\Repository\Monster\MonsterRepository;
 use App\Trait\IdTrait;
 use App\Utils\Utils;
@@ -151,7 +151,7 @@ class Monster
         return $this->ailmentsEffectiveness;
     }
 
-    public function findAilmentEffectiveness(Ailment $ailment): ?MonsterAilmentEffectiveness
+    public function findAilmentEffectiveness(StatusEffect $ailment): ?MonsterAilmentEffectiveness
     {
         $criteria = new Criteria();
         $criteria->where(Criteria::expr()->eq('ailment', $ailment));

@@ -2,6 +2,7 @@
 
 namespace App\Entity\Weapon;
 
+use App\Entity\Item;
 use App\Enum\Weapon\WeaponType;
 use App\Repository\Weapon\WeaponRepository;
 use App\Trait\IdTrait;
@@ -57,16 +58,26 @@ class Weapon
     private Collection $materials;
 
     /**
-     * @var ArrayCollection<int, WeaponAilment>
+     * @var ArrayCollection<int, WeaponStatus>
      */
-    #[ORM\OneToMany(mappedBy: 'weapon', targetEntity: WeaponAilment::class, cascade: ['ALL'], orphanRemoval: true)]
-    private Collection $ailments;
+    #[ORM\OneToMany(mappedBy: 'weapon', targetEntity: WeaponStatus::class, cascade: ['ALL'], orphanRemoval: true)]
+    private Collection $statuses;
+
+    /**
+     * @var ArrayCollection<int, WeaponExtra>
+     */
+    #[ORM\OneToMany(mappedBy: 'weapon', targetEntity: WeaponExtra::class, cascade: ['ALL'], orphanRemoval: true)]
+    private Collection $extras;
+
+    #[ORM\ManyToOne]
+    private ?Item $item = null;
 
     public function __construct()
     {
         $this->slots = new ArrayCollection();
         $this->materials = new ArrayCollection();
-        $this->ailments = new ArrayCollection();
+        $this->statuses = new ArrayCollection();
+        $this->extras = new ArrayCollection();
     }
 
     public function getName(): ?string
@@ -84,6 +95,11 @@ class Weapon
     public function getType(): ?WeaponType
     {
         return $this->type;
+    }
+
+    public function is(WeaponType ...$types): bool
+    {
+        return \in_array($this->type, $types);
     }
 
     public function setType(WeaponType $type): static
@@ -237,31 +253,73 @@ class Weapon
     }
 
     /**
-     * @return Collection<int, WeaponAilment>
+     * @return Collection<int, WeaponStatus>
      */
-    public function getAilments(): Collection
+    public function getStatuses(): Collection
     {
-        return $this->ailments;
+        return $this->statuses;
     }
 
-    public function addAilment(WeaponAilment $ailment): static
+    public function addStatus(WeaponStatus $status): static
     {
-        if (!$this->ailments->contains($ailment)) {
-            $this->ailments->add($ailment);
-            $ailment->setWeapon($this);
+        if (!$this->statuses->contains($status)) {
+            $this->statuses->add($status);
+            $status->setWeapon($this);
         }
 
         return $this;
     }
 
-    public function removeAilment(WeaponAilment $ailment): static
+    public function removeStatus(WeaponStatus $status): static
     {
-        if ($this->ailments->removeElement($ailment)) {
+        if ($this->statuses->removeElement($status)) {
             // set the owning side to null (unless already changed)
-            if ($ailment->getWeapon() === $this) {
-                $ailment->setWeapon(null);
+            if ($status->getWeapon() === $this) {
+                $status->setWeapon(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WeaponExtra>
+     */
+    public function getExtras(): Collection
+    {
+        return $this->extras;
+    }
+
+    public function addExtra(WeaponExtra $extra): static
+    {
+        if (!$this->extras->contains($extra)) {
+            $this->extras->add($extra);
+            $extra->setWeapon($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExtra(WeaponExtra $extra): static
+    {
+        if ($this->extras->removeElement($extra)) {
+            // set the owning side to null (unless already changed)
+            if ($extra->getWeapon() === $this) {
+                $extra->setWeapon(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getItem(): ?Item
+    {
+        return $this->item;
+    }
+
+    public function setItem(?Item $item): static
+    {
+        $this->item = $item;
 
         return $this;
     }

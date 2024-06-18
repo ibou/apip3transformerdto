@@ -3,8 +3,8 @@
 namespace App\Factory\Monster;
 
 use App\Entity\Monster\Monster;
-use App\Enum\Ailment;
 use App\Enum\Monster\MonsterType;
+use App\Enum\StatusEffect;
 use Zenstruck\Foundry\ModelFactory;
 
 /**
@@ -42,7 +42,7 @@ final class MonsterFactory extends ModelFactory
 
     private function withAilmentEffectiveness(Monster $monster): void
     {
-        foreach (Ailment::cases() as $case) {
+        foreach (StatusEffect::monstersAilmentsCases() as $case) {
             MonsterAilmentEffectivenessFactory::createOne([
                 'ailment' => $case,
                 'monster' => $monster,

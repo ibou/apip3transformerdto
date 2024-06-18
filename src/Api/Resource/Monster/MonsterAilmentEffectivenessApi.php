@@ -11,7 +11,7 @@ use ApiPlatform\Metadata\Link;
 use App\Api\State\EntityStateProvider;
 use App\Entity\Monster\Monster;
 use App\Entity\Monster\MonsterAilmentEffectiveness;
-use App\Enum\Ailment;
+use App\Enum\StatusEffect;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Uid\Uuid;
 
@@ -43,7 +43,7 @@ class MonsterAilmentEffectivenessApi
     #[ApiProperty(identifier: true)]
     public ?Uuid $id = null;
 
-    public ?Ailment $ailment = null;
+    public ?StatusEffect $ailment = null;
 
     public ?string $buildup = null;
 

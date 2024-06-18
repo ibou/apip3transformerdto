@@ -18,7 +18,8 @@
       "imagesUrls": "@array@",
       "slots": "@string@.contains('/api/weapons').contains('/slots')",
       "materials": "@string@.contains('/api/weapons').contains('/materials')",
-      "ailments": "@string@.contains('/api/weapons').contains('/ailments')"
+      "statuses": "@string@.contains('/api/weapons').contains('/statuses')",
+      "extras": "@string@.contains('/api/weapons').contains('/extras')"
     },
     "@...@"
   ],

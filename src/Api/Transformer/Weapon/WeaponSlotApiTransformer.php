@@ -2,13 +2,12 @@
 
 namespace App\Api\Transformer\Weapon;
 
-use App\Api\Resource\Quest\QuestApi;
 use App\Api\Resource\Weapon\WeaponSlotApi;
 use App\Api\Transformer\AbstractTransformer;
 use App\Entity\Weapon\WeaponSlot;
 
 /**
- * @method array<int, QuestApi> transformAll(iterable $entities)
+ * @method array<int, WeaponSlotApi> transformAll(iterable $entities)
  */
 final class WeaponSlotApiTransformer extends AbstractTransformer
 {

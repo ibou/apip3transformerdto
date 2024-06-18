@@ -38,7 +38,7 @@ class CrawlerUtils
 
     public static function hasClass(\DOMNode $node, string $className): bool
     {
-        $nodeClass = self::findAttributeByName($node, 'class');
+        $nodeClass = self::findAttributeByName($node, 'class') ?? '';
 
         return \str_contains($nodeClass, $className);
     }

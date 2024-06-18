@@ -2,37 +2,35 @@
 
 namespace App\Entity\Weapon;
 
-use App\Enum\Ailment;
-use App\Repository\Weapon\WeaponAilmentRepository;
+use App\Enum\StatusEffect;
+use App\Repository\Weapon\WeaponStatusRepository;
 use App\Trait\IdTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: WeaponAilmentRepository::class)]
-class WeaponAilment
+#[ORM\Entity(repositoryClass: WeaponStatusRepository::class)]
+class WeaponStatus
 {
     use IdTrait;
 
-    #[ORM\Column(length: 255, enumType: Ailment::class)]
-    private ?Ailment $ailment = null;
+    #[ORM\Column(length: 255, enumType: StatusEffect::class)]
+    private ?StatusEffect $status = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $value = null;
 
-    #[ORM\ManyToOne(inversedBy: 'ailments')]
+    #[ORM\ManyToOne(inversedBy: 'statuses')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Weapon $weapon = null;
 
-    public function getAilment(): ?Ailment
+    public function getStatus(): ?StatusEffect
     {
-        return $this->ailment;
+        return $this->status;
     }
 
-    public function setAilment(Ailment $ailment): static
+    public function setStatus(?StatusEffect $status): void
     {
-        $this->ailment = $ailment;
-
-        return $this;
+        $this->status = $status;
     }
 
     public function getValue(): ?int

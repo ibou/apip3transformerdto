@@ -1,0 +1,9 @@
+{
+  "@context": "/api/contexts/WeaponExtra",
+  "@id": "@string@.contains('/api/weapons').contains('/extras/')",
+  "@type": "WeaponExtra",
+  "id": "@uuid@",
+  "name": "@string@||@null@",
+  "active": "@boolean@||@null@",
+  "value": "@integer@||@null@"
+}

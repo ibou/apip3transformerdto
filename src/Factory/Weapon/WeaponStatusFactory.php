@@ -2,25 +2,25 @@
 
 namespace App\Factory\Weapon;
 
-use App\Entity\Weapon\WeaponAilment;
-use App\Enum\Ailment;
+use App\Entity\Weapon\WeaponStatus;
+use App\Enum\StatusEffect;
 use Zenstruck\Foundry\ModelFactory;
 
 /**
- * @extends ModelFactory<WeaponAilment>
+ * @extends ModelFactory<WeaponStatus>
  */
-final class WeaponAilmentFactory extends ModelFactory
+final class WeaponStatusFactory extends ModelFactory
 {
     protected function getDefaults(): array
     {
         return [
-            'ailment' => self::faker()->randomElement(Ailment::cases()),
+            'status' => self::faker()->randomElement(StatusEffect::weaponStatusesCases()),
             'value' => self::faker()->numberBetween(1, 50),
         ];
     }
 
     protected static function getClass(): string
     {
-        return WeaponAilment::class;
+        return WeaponStatus::class;
     }
 }

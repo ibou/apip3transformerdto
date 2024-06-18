@@ -10,13 +10,12 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
 use App\Api\State\EntityStateProvider;
 use App\Entity\Weapon\Weapon;
-use App\Entity\Weapon\WeaponAilment;
-use App\Enum\Ailment;
+use App\Entity\Weapon\WeaponExtra;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Uid\Uuid;
 
 #[ApiResource(
-    shortName: 'WeaponAilment',
+    shortName: 'WeaponExtra',
     operations: [
         new GetCollection(
             uriTemplate: self::AS_WEAPON_SUBRESOURCE,
@@ -34,21 +33,23 @@ use Symfony\Component\Uid\Uuid;
         ),
     ],
     provider: EntityStateProvider::class,
-    stateOptions: new Options(entityClass: WeaponAilment::class),
+    stateOptions: new Options(entityClass: WeaponExtra::class),
 )]
-class WeaponAilmentApi
+class WeaponExtraApi
 {
-    private const string AS_WEAPON_SUBRESOURCE = '/weapons/{weapon_id}/ailments';
+    private const string AS_WEAPON_SUBRESOURCE = '/weapons/{weapon_id}/extras';
 
     #[ApiProperty(identifier: true)]
     public ?Uuid $id = null;
 
-    public ?Ailment $ailment = null;
+    public ?string $name = null;
+
+    public ?bool $active = null;
 
     public ?int $value = null;
 
     #[Ignore]
-    public ?WeaponAilment $weaponAilment = null;
+    public ?WeaponExtra $weaponExtra = null;
 
     #[Ignore]
     public ?Weapon $weapon = null;

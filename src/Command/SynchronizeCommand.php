@@ -33,7 +33,7 @@ class SynchronizeCommand extends Command
             $this->synchronize();
 
             return Command::SUCCESS;
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             $this->logger->critical($e->getMessage());
             $this->logger->critical($e->getTraceAsString());
 

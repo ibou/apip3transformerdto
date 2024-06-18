@@ -2,14 +2,13 @@
 
 namespace App\Api\Transformer\Weapon;
 
-use App\Api\Resource\Quest\QuestApi;
 use App\Api\Resource\Weapon\WeaponMaterialApi;
 use App\Api\Transformer\AbstractTransformer;
 use App\Api\Transformer\ItemApiTransformer;
 use App\Entity\Weapon\WeaponMaterial;
 
 /**
- * @method array<int, QuestApi> transformAll(iterable $entities)
+ * @method array<int, WeaponMaterialApi> transformAll(iterable $entities)
  */
 final class WeaponMaterialApiTransformer extends AbstractTransformer
 {

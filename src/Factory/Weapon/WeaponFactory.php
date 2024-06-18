@@ -32,18 +32,19 @@ final class WeaponFactory extends ModelFactory
         return $this->afterPersist(function (Weapon $weapon): void {
             $this->withSlots($weapon);
             $this->withMaterials($weapon);
-            $this->withAilments($weapon);
+            $this->withStatuses($weapon);
+            $this->withExtra($weapon);
         });
     }
 
     private function withSlots(Weapon $weapon): void
     {
-        WeaponSlotFactory::createMany(self::faker()->numberBetween(0, 3), [
+        WeaponSlotFactory::createMany(self::faker()->numberBetween(1, 3), [
             'weapon' => $weapon,
             'type' => WeaponSlotType::BASIC,
         ]);
 
-        WeaponSlotFactory::createMany(self::faker()->numberBetween(0, 3), [
+        WeaponSlotFactory::createMany(self::faker()->numberBetween(1, 3), [
             'weapon' => $weapon,
             'type' => WeaponSlotType::RAMPAGE,
         ]);
@@ -51,20 +52,27 @@ final class WeaponFactory extends ModelFactory
 
     private function withMaterials(Weapon $weapon): void
     {
-        WeaponMaterialFactory::createMany(self::faker()->numberBetween(0, 5), [
+        WeaponMaterialFactory::createMany(self::faker()->numberBetween(1, 5), [
             'weapon' => $weapon,
             'type' => WeaponMaterialType::FORGING,
         ]);
 
-        WeaponMaterialFactory::createMany(self::faker()->numberBetween(0, 5), [
+        WeaponMaterialFactory::createMany(self::faker()->numberBetween(1, 5), [
             'weapon' => $weapon,
             'type' => WeaponMaterialType::UPGRADE,
         ]);
     }
 
-    private function withAilments(Weapon $weapon): void
+    private function withStatuses(Weapon $weapon): void
     {
-        WeaponAilmentFactory::createMany(self::faker()->numberBetween(0, 2), [
+        WeaponStatusFactory::createMany(self::faker()->numberBetween(1, 2), [
+            'weapon' => $weapon,
+        ]);
+    }
+
+    private function withExtra(Weapon $weapon): void
+    {
+        WeaponExtraFactory::createMany(self::faker()->numberBetween(1, 2), [
             'weapon' => $weapon,
         ]);
     }

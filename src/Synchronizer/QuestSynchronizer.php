@@ -40,7 +40,7 @@ class QuestSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(QuestType $type): void
     {
-        $this->logger()->debug(\sprintf('>>> Quest : start sync "%s"', $type->label()));
+        $this->logger()->info(\sprintf('>>> Quest : start sync "%s"', $type->label()));
 
         $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->kiranicoView());
         $crawler = new BaseCrawler($url);

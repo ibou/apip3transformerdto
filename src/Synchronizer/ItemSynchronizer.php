@@ -27,7 +27,7 @@ class ItemSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(ItemType $type): void
     {
-        $this->logger()->debug(\sprintf('>>> Item : start sync "%s"', $type->label()));
+        $this->logger()->info(\sprintf('>>> Item : start sync "%s"', $type->label()));
 
         $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->value);
         $crawler = new BaseCrawler($url);

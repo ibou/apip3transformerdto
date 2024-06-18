@@ -3,9 +3,12 @@
 namespace App\Enum\Weapon;
 
 use App\Contract\Labelized;
+use App\Trait\Enum\FromLabelTrait;
 
 enum WeaponMaterialType: string implements Labelized
 {
+    use FromLabelTrait;
+
     case FORGING = 'forging';
     case UPGRADE = 'upgrade';
 
