@@ -7,7 +7,7 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use App\Api\State\EntityStateProvider;
+use App\Api\State\Provider\EntityStateProvider;
 use App\Entity\Weapon\Weapon;
 use App\Enum\Weapon\WeaponType;
 use Symfony\Component\Serializer\Attribute\Ignore;
@@ -47,19 +47,19 @@ class WeaponApi
     public array $imagesUrls = [];
 
     /** @var list<WeaponSlotApi> */
-    #[ApiProperty(readableLink: false, uriTemplate: '/weapons/{weapon_id}/slots')]
+    #[ApiProperty(uriTemplate: '/weapons/{weapon_id}/slots')]
     public array $slots = [];
 
     /** @var list<WeaponMaterialApi> */
-    #[ApiProperty(readableLink: false, uriTemplate: '/weapons/{weapon_id}/materials')]
+    #[ApiProperty(uriTemplate: '/weapons/{weapon_id}/materials')]
     public array $materials = [];
 
     /** @var list<WeaponStatusApi> */
-    #[ApiProperty(readableLink: false, uriTemplate: '/weapons/{weapon_id}/statuses')]
+    #[ApiProperty(uriTemplate: '/weapons/{weapon_id}/statuses')]
     public array $statuses = [];
 
     /** @var list<WeaponExtraApi> */
-    #[ApiProperty(readableLink: false, uriTemplate: '/weapons/{weapon_id}/extras')]
+    #[ApiProperty(uriTemplate: '/weapons/{weapon_id}/extras')]
     public array $extras = [];
 
     #[Ignore]

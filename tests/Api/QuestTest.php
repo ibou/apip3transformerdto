@@ -6,11 +6,7 @@ use App\Entity\Quest\Quest;
 use App\Factory\ItemFactory;
 use App\Factory\Monster\MonsterFactory;
 use App\Factory\Quest\QuestFactory;
-use App\Factory\Quest\QuestItemFactory;
-use App\Factory\Quest\QuestMonsterAreaFactory;
-use App\Factory\Quest\QuestMonsterAttributeFactory;
 use App\Factory\Quest\QuestMonsterFactory;
-use App\Factory\Quest\QuestMonsterSizeFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -89,26 +85,6 @@ class QuestTest extends BaseJsonApiTestCase
     }
 
     #[Test]
-    public function getMonsterAttribute(): void
-    {
-        /** @var Quest $quest */
-        $quest = QuestFactory::createOne()->object();
-        if (null === $monster = $quest->getMonsters()->first() ?: null) {
-            $monster = QuestMonsterFactory::createOne(['quest' => $quest]);
-        }
-        if (null === $attribute = $monster->getAttributes()->first() ?: null) {
-            $attribute = QuestMonsterAttributeFactory::createOne(['monster' => $monster]);
-        }
-
-        $endpoint = \sprintf('/api/quests/%s/monsters/%s/attributes/%s',
-            $quest->getId(), $monster->getId(), $attribute->getId());
-        $this->client?->request('GET', $endpoint);
-
-        $response = $this->client?->getResponse() ?? new Response();
-        $this->assertResponse($response, 'Quest/get_quest_monster_attribute');
-    }
-
-    #[Test]
     public function getMonsterSizes(): void
     {
         /** @var Quest $quest */
@@ -123,26 +99,6 @@ class QuestTest extends BaseJsonApiTestCase
 
         $response = $this->client?->getResponse() ?? new Response();
         $this->assertResponse($response, 'Quest/get_quest_monster_sizes');
-    }
-
-    #[Test]
-    public function getMonsterSize(): void
-    {
-        /** @var Quest $quest */
-        $quest = QuestFactory::createOne()->object();
-        if (null === $monster = $quest->getMonsters()->first() ?: null) {
-            $monster = QuestMonsterFactory::createOne(['quest' => $quest]);
-        }
-        if (null === $size = $monster->getSizes()->first() ?: null) {
-            $size = QuestMonsterSizeFactory::createOne(['monster' => $monster]);
-        }
-
-        $endpoint = \sprintf('/api/quests/%s/monsters/%s/sizes/%s',
-            $quest->getId(), $monster->getId(), $size->getId());
-        $this->client?->request('GET', $endpoint);
-
-        $response = $this->client?->getResponse() ?? new Response();
-        $this->assertResponse($response, 'Quest/get_quest_monster_size');
     }
 
     #[Test]
@@ -163,26 +119,6 @@ class QuestTest extends BaseJsonApiTestCase
     }
 
     #[Test]
-    public function getMonsterArea(): void
-    {
-        /** @var Quest $quest */
-        $quest = QuestFactory::createOne()->object();
-        if (null === $monster = $quest->getMonsters()->first() ?: null) {
-            $monster = QuestMonsterFactory::createOne(['quest' => $quest]);
-        }
-        if (null === $area = $monster->getAreas()->first() ?: null) {
-            $area = QuestMonsterAreaFactory::createOne(['monster' => $monster]);
-        }
-
-        $endpoint = \sprintf('/api/quests/%s/monsters/%s/areas/%s',
-            $quest->getId(), $monster->getId(), $area->getId());
-        $this->client?->request('GET', $endpoint);
-
-        $response = $this->client?->getResponse() ?? new Response();
-        $this->assertResponse($response, 'Quest/get_quest_monster_area');
-    }
-
-    #[Test]
     public function getItems(): void
     {
         /** @var Quest $quest */
@@ -192,21 +128,5 @@ class QuestTest extends BaseJsonApiTestCase
 
         $response = $this->client?->getResponse() ?? new Response();
         $this->assertResponse($response, 'Quest/get_quest_items');
-    }
-
-    #[Test]
-    public function getItem(): void
-    {
-        /** @var Quest $quest */
-        $quest = QuestFactory::createOne()->object();
-        if (null === $item = $quest->getItems()->first() ?: null) {
-            $item = QuestItemFactory::createOne(['quest' => $quest]);
-        }
-
-        $endpoint = \sprintf('/api/quests/%s/items/%s', $quest->getId(), $item->getId());
-        $this->client?->request('GET', $endpoint);
-
-        $response = $this->client?->getResponse() ?? new Response();
-        $this->assertResponse($response, 'Quest/get_quest_item');
     }
 }

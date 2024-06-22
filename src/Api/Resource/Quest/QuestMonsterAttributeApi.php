@@ -5,10 +5,10 @@ namespace App\Api\Resource\Quest;
 use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
-use App\Api\State\EntityStateProvider;
+use ApiPlatform\Metadata\NotExposed;
+use App\Api\State\Provider\EntityStateProvider;
 use App\Entity\Quest\Quest;
 use App\Entity\Quest\QuestMonster;
 use App\Entity\Quest\QuestMonsterAttribute;
@@ -26,13 +26,8 @@ use Symfony\Component\Uid\Uuid;
             ],
             itemUriTemplate: self::AS_QUEST_MONSTER_SUBRESOURCE.'/{id}'
         ),
-        new Get(
-            uriTemplate: self::AS_QUEST_MONSTER_SUBRESOURCE.'/{id}',
-            uriVariables: [
-                'quest_id' => new Link(toProperty: 'quest', fromClass: Quest::class),
-                'monster_id' => new Link(toProperty: 'monster', fromClass: QuestMonster::class),
-                'id' => 'id',
-            ],
+        new NotExposed(
+            uriTemplate: self::AS_QUEST_MONSTER_SUBRESOURCE.'/{id}'
         ),
     ],
     provider: EntityStateProvider::class,

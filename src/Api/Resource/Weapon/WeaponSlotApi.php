@@ -5,10 +5,10 @@ namespace App\Api\Resource\Weapon;
 use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
-use App\Api\State\EntityStateProvider;
+use ApiPlatform\Metadata\NotExposed;
+use App\Api\State\Provider\EntityStateProvider;
 use App\Entity\Weapon\Weapon;
 use App\Entity\Weapon\WeaponSlot;
 use App\Enum\Weapon\WeaponSlotType;
@@ -25,12 +25,8 @@ use Symfony\Component\Uid\Uuid;
             ],
             itemUriTemplate: self::AS_WEAPON_SUBRESOURCE.'/{id}'
         ),
-        new Get(
-            uriTemplate: self::AS_WEAPON_SUBRESOURCE.'/{id}',
-            uriVariables: [
-                'weapon_id' => new Link(toProperty: 'weapon', fromClass: Weapon::class),
-                'id' => 'id',
-            ],
+        new NotExposed(
+            uriTemplate: self::AS_WEAPON_SUBRESOURCE.'/{id}'
         ),
     ],
     provider: EntityStateProvider::class,

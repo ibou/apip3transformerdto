@@ -5,10 +5,10 @@ namespace App\Api\Resource\Monster;
 use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
-use App\Api\State\EntityStateProvider;
+use ApiPlatform\Metadata\NotExposed;
+use App\Api\State\Provider\EntityStateProvider;
 use App\Entity\Monster\Monster;
 use App\Entity\Monster\MonsterAilmentEffectiveness;
 use App\Enum\StatusEffect;
@@ -25,12 +25,8 @@ use Symfony\Component\Uid\Uuid;
             ],
             itemUriTemplate: self::AS_MONSTER_SUBRESOURCE.'/{id}'
         ),
-        new Get(
-            uriTemplate: self::AS_MONSTER_SUBRESOURCE.'/{id}',
-            uriVariables: [
-                'monster_id' => new Link(toProperty: 'monster', fromClass: Monster::class),
-                'id' => 'id',
-            ],
+        new NotExposed(
+            uriTemplate: self::AS_MONSTER_SUBRESOURCE.'/{id}'
         ),
     ],
     provider: EntityStateProvider::class,

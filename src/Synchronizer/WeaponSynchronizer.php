@@ -7,6 +7,7 @@ use App\Entity\Weapon\WeaponExtra;
 use App\Entity\Weapon\WeaponMaterial;
 use App\Entity\Weapon\WeaponSlot;
 use App\Entity\Weapon\WeaponStatus;
+use App\Enum\Skill\SkillType;
 use App\Enum\StatusEffect;
 use App\Enum\Weapon\WeaponMaterialType;
 use App\Enum\Weapon\WeaponSlotType;
@@ -87,6 +88,7 @@ class WeaponSynchronizer extends AbstractSynchronizer
         $this->synchronizeName($weapon, $crawler);
         if (null === $weapon->getName()) {
             $this->logger()->warning($href);
+
             return;
         }
 
@@ -96,7 +98,7 @@ class WeaponSynchronizer extends AbstractSynchronizer
         $this->synchronizeSlots($weapon, $crawler);
         $this->synchronizeAilments($weapon, $crawler);
 
-        if ($weapon->getType()->withSharpness()) {
+        if ($weapon->getType()?->withSharpness()) {
             $this->synchronizeSharpness($weapon, $crawler);
             $this->synchronizeAffinity($weapon, $crawler);
         }
@@ -120,6 +122,8 @@ class WeaponSynchronizer extends AbstractSynchronizer
         if ($weapon->is(WeaponType::LIGHT_BOWGUN, WeaponType::HEAVY_BOWGUN)) {
             $this->synchronizeBowgunExtra($weapon, $crawler);
         }
+
+        $this->synchronizeSkills($weapon, $crawler);
 
         $this->em()->persist($weapon);
 
@@ -376,12 +380,12 @@ class WeaponSynchronizer extends AbstractSynchronizer
 
     private function synchronizeBowgunExtra(Weapon $weapon, BaseCrawler $crawler): void
     {
-        //        $bowgunsDivs = $crawler->findNodesBySelector(WeaponSelector::DETAIL_BOWGUN_EXTRA_DIV->value);
-        //        foreach ($bowgunsDivs as $bowgunDiv) {
-        //            $extra = new WeaponExtra();
-        //            $extra->setName(Utils::replaceMultipleSpacesByOne(Utils::cleanString($bowgunDiv->textContent)));
-        //            $weapon->addExtra($extra);
-        //        }
+        $bowgunsDivs = $crawler->findNodesBySelector(WeaponSelector::DETAIL_BOWGUN_EXTRA_DIV->value);
+        foreach ($bowgunsDivs as $bowgunDiv) {
+            $extra = new WeaponExtra();
+            $extra->setName(Utils::replaceMultipleSpacesByOne(Utils::cleanString($bowgunDiv->textContent)));
+            $weapon->addExtra($extra);
+        }
 
         $bowgunsAmmoTrs = $crawler->findNodesBySelector(WeaponSelector::DETAIL_BOWGUN_AMMO_EXTRA_TR->value);
         /** @var \DOMNode $bowgunAmmoTr */
@@ -416,6 +420,27 @@ class WeaponSynchronizer extends AbstractSynchronizer
         }
     }
 
+    public function synchronizeSkills(Weapon $weapon, BaseCrawler $crawler): void
+    {
+        $skillsDivs = $crawler->findNodesBySelector(WeaponSelector::DETAIL_SKILLS_DIV->value);
+
+        /** @var \DOMNode $skillDiv */
+        foreach ($skillsDivs as $skillDiv) {
+            $nameAndLevel = Utils::splitStringInTwoByLastWhitespace(Utils::cleanString($skillDiv->textContent));
+            if (!isset($nameAndLevel[0]) || !isset($nameAndLevel[1])) {
+                continue;
+            }
+
+            $level = $this->cache()
+                ->findSkillLevel($nameAndLevel[0], SkillType::RAMPAGE, Utils::romanToNumber($nameAndLevel[1]));
+            if (null === $level) {
+                continue;
+            }
+
+            $weapon->addSkill($level);
+        }
+    }
+
     private function getListUrl(): string
     {
         return \sprintf('%s/%s', $this->getKiranicoUrl(), self::ITEMS_LIST_PATH);
@@ -423,6 +448,6 @@ class WeaponSynchronizer extends AbstractSynchronizer
 
     public static function getDefaultPriority(): int
     {
-        return 70;
+        return 60;
     }
 }

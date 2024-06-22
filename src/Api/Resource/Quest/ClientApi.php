@@ -6,7 +6,7 @@ use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\NotExposed;
-use App\Api\State\EntityStateProvider;
+use App\Api\State\Provider\EntityStateProvider;
 use App\Entity\Quest\Client;
 use Symfony\Component\Uid\Uuid;
 

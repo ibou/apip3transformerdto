@@ -5,7 +5,6 @@ namespace App\Tests\Api;
 use App\Entity\Monster\Monster;
 use App\Factory\Monster\MonsterBodyPartFactory;
 use App\Factory\Monster\MonsterFactory;
-use App\Factory\Monster\MonsterItemFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -80,28 +79,6 @@ class MonsterTest extends BaseJsonApiTestCase
     }
 
     #[Test]
-    public function getBodyPartWeakness(): void
-    {
-        /** @var Monster $monster */
-        $monster = MonsterFactory::createOne()->object();
-        $bodyPart = $monster->getBodyParts()->first() ?: null;
-        $weakness = $bodyPart?->getWeaknesses()?->first() ?: null;
-
-        if (null === $weakness) { // FIXME
-            $this->assertTrue(false);
-
-            return;
-        }
-
-        $endpoint = \sprintf('/api/monsters/%s/body_parts/%s/weaknesses/%s',
-            $monster->getId(), $bodyPart->getId(), $weakness->getId());
-        $this->client?->request('GET', $endpoint);
-
-        $response = $this->client?->getResponse() ?? new Response();
-        $this->assertResponse($response, 'Monster/get_monster_body_part_weakness');
-    }
-
-    #[Test]
     public function getItems(): void
     {
         /** @var Monster $monster */
@@ -111,21 +88,5 @@ class MonsterTest extends BaseJsonApiTestCase
 
         $response = $this->client?->getResponse() ?? new Response();
         $this->assertResponse($response, 'Monster/get_monster_items');
-    }
-
-    #[Test]
-    public function getItem(): void
-    {
-        /** @var Monster $monster */
-        $monster = MonsterFactory::createOne()->object();
-        if (null === $item = $monster->getItems()->first() ?: null) {
-            $item = MonsterItemFactory::createOne(['monster' => $monster]);
-        }
-
-        $endpoint = \sprintf('/api/monsters/%s/items/%s', $monster->getId(), $item->getId());
-        $this->client?->request('GET', $endpoint);
-
-        $response = $this->client?->getResponse() ?? new Response();
-        $this->assertResponse($response, 'Monster/get_monster_item');
     }
 }

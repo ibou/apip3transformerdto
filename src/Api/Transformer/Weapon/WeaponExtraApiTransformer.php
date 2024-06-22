@@ -4,7 +4,6 @@ namespace App\Api\Transformer\Weapon;
 
 use App\Api\Resource\Weapon\WeaponExtraApi;
 use App\Api\Transformer\AbstractTransformer;
-use App\Api\Transformer\ItemApiTransformer;
 use App\Entity\Weapon\WeaponExtra;
 
 /**
@@ -12,10 +11,6 @@ use App\Entity\Weapon\WeaponExtra;
  */
 final class WeaponExtraApiTransformer extends AbstractTransformer
 {
-    public function __construct(private readonly ItemApiTransformer $itemApiTransformer)
-    {
-    }
-
     public function transform(object $source): WeaponExtraApi
     {
         /** @var WeaponExtra $entity */

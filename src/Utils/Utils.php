@@ -38,8 +38,37 @@ class Utils
         return preg_replace('!\s+!', ' ', $str) ?? $str;
     }
 
-    public static function reverseNumber(int $number): int
+    public static function splitStringInTwoByLastWhitespace(string $str): array
     {
-        return -$number;
+        return preg_split("/\s+(?=\S*+$)/", $str);
+    }
+
+    public static function romanToNumber(string $roman): int
+    {
+        $romans = [
+            'M' => 1000,
+            'CM' => 900,
+            'D' => 500,
+            'CD' => 400,
+            'C' => 100,
+            'XC' => 90,
+            'L' => 50,
+            'XL' => 40,
+            'X' => 10,
+            'IX' => 9,
+            'V' => 5,
+            'IV' => 4,
+            'I' => 1,
+        ];
+
+        $result = 0;
+        foreach ($romans as $key => $value) {
+            while (str_starts_with($roman, $key)) {
+                $result += $value;
+                $roman = substr($roman, strlen($key));
+            }
+        }
+
+        return $result;
     }
 }

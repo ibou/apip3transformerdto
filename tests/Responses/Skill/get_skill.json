@@ -1,0 +1,10 @@
+{
+  "@context": "/api/contexts/Skill",
+  "@id": "@string@.contains('/api/skills/')",
+  "@type": "Skill",
+  "id": "@uuid@",
+  "type": "basic||rampage",
+  "name": "@string@",
+  "description": "@string@||@null@",
+  "levels": "@string@.contains('/api/skills').contains('/levels')"
+}

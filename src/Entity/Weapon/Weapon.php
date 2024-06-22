@@ -2,7 +2,7 @@
 
 namespace App\Entity\Weapon;
 
-use App\Entity\Item;
+use App\Entity\Skill\SkillLevel;
 use App\Enum\Weapon\WeaponType;
 use App\Repository\Weapon\WeaponRepository;
 use App\Trait\IdTrait;
@@ -69,8 +69,11 @@ class Weapon
     #[ORM\OneToMany(mappedBy: 'weapon', targetEntity: WeaponExtra::class, cascade: ['ALL'], orphanRemoval: true)]
     private Collection $extras;
 
-    #[ORM\ManyToOne]
-    private ?Item $item = null;
+    /**
+     * @var Collection<int, SkillLevel>
+     */
+    #[ORM\ManyToMany(targetEntity: SkillLevel::class, inversedBy: 'weapons')]
+    private Collection $skills;
 
     public function __construct()
     {
@@ -78,6 +81,7 @@ class Weapon
         $this->materials = new ArrayCollection();
         $this->statuses = new ArrayCollection();
         $this->extras = new ArrayCollection();
+        $this->skills = new ArrayCollection();
     }
 
     public function getName(): ?string
@@ -312,14 +316,26 @@ class Weapon
         return $this;
     }
 
-    public function getItem(): ?Item
+    /**
+     * @return Collection<int, SkillLevel>
+     */
+    public function getSkills(): Collection
     {
-        return $this->item;
+        return $this->skills;
     }
 
-    public function setItem(?Item $item): static
+    public function addSkill(SkillLevel $skill): static
     {
-        $this->item = $item;
+        if (!$this->skills->contains($skill)) {
+            $this->skills->add($skill);
+        }
+
+        return $this;
+    }
+
+    public function removeSkill(SkillLevel $skill): static
+    {
+        $this->skills->removeElement($skill);
 
         return $this;
     }

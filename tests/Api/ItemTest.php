@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ItemTest extends BaseJsonApiTestCase
 {
     #[Test]
-    public function collection(): void
+    public function getItems(): void
     {
         ItemFactory::createMany(self::ITEMS_PER_PAGE + 1);
         $this->client?->request('GET', '/api/items');
@@ -20,7 +20,7 @@ class ItemTest extends BaseJsonApiTestCase
     }
 
     #[Test]
-    public function item(): void
+    public function getItem(): void
     {
         /** @var Item $item */
         $item = ItemFactory::createOne()->object();

@@ -1,0 +1,16 @@
+{
+  "@context": "/api/contexts/SkillLevel",
+  "@id": "@string@.contains('/api/skill').contains('/levels')",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/skills').contains('/levels/')",
+      "@type": "SkillLevel",
+      "id": "@uuid@",
+      "level": "@integer@",
+      "effect": "@string@"
+    },
+    "@...@"
+  ]
+}

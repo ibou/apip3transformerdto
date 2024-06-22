@@ -1,0 +1,25 @@
+{
+  "@context": "/api/contexts/Skill",
+  "@id": "/api/skills",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/skills/')",
+      "@type": "Skill",
+      "id": "@uuid@",
+      "type": "basic||rampage",
+      "name": "@string@",
+      "description": "@string@||@null@",
+      "levels": "@string@.contains('/api/skills').contains('/levels')"
+    },
+    "@...@"
+  ],
+  "hydra:view": {
+    "@id": "/api/skills?page=1",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "/api/skills?page=1",
+    "hydra:last": "@string@.contains('/api/skills').contains('?page=')",
+    "hydra:next": "@string@.contains('/api/skills').contains('?page=2')"
+  }
+  }

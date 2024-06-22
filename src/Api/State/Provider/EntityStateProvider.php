@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\State;
+namespace App\Api\State\Provider;
 
 use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Metadata\CollectionOperationInterface;

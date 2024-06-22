@@ -22,4 +22,5 @@ enum WeaponSelector: string
     case DETAIL_SWITCH_AXE_OR_CHARGE_BLADE_INSECT_GLAIVE_EXTRA_DIV = 'div.min-w-0.max-w-2xl table tbody tr td:nth-of-type(6) small > div > div';
     case DETAIL_BOWGUN_EXTRA_DIV = 'div.min-w-0.max-w-2xl table tbody tr td:nth-of-type(5) small tr td:first-of-type div';
     case DETAIL_BOWGUN_AMMO_EXTRA_TR = 'div.min-w-0.max-w-2xl table tbody tr td:nth-of-type(5) small tr td:not(first-of-type) table tr';
+    case DETAIL_SKILLS_DIV = 'div.min-w-0.max-w-2xl table tbody tr td:nth-of-type(7) small > div';
 }
