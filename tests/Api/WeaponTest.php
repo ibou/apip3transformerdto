@@ -2,9 +2,10 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Weapon\Weapon;
+use App\Entity\Equipment\Weapon\Weapon;
+use App\Factory\Equipment\Skill\SkillFactory;
+use App\Factory\Equipment\Weapon\WeaponFactory;
 use App\Factory\ItemFactory;
-use App\Factory\Weapon\WeaponFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,6 +14,7 @@ class WeaponTest extends BaseJsonApiTestCase
     protected function setUp(): void
     {
         ItemFactory::createMany(5); // used for WeaponMaterial
+        SkillFactory::createMany(5); // used for $skills property
     }
 
     #[Test]

@@ -1,8 +1,0 @@
-{
-  "@context": "/api/contexts/WeaponSlot",
-  "@id": "@string@.contains('/api/weapons/').contains('/slots/')",
-  "@type": "WeaponSlot",
-  "id": "@uuid@",
-  "type": "basic||rampage",
-  "quantity": "@integer@"
-}

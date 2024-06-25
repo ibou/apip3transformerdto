@@ -82,7 +82,7 @@ test: ## Test phpunit
 	@$(SYM_CONT) ./vendor/phpunit/phpunit/phpunit tests
 
 analyse-php: ## Analyse php
-	@$(SYM_CONT) ./vendor/bin/phpstan analyse -c phpstan.neon
+	@$(SYM_CONT) ./vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 1G
 
 lint-php: ## Lint php
 	@$(SYM_CONT) ./vendor/bin/php-cs-fixer fix --dry-run --diff

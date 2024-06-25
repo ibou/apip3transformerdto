@@ -38,9 +38,12 @@ class Utils
         return preg_replace('!\s+!', ' ', $str) ?? $str;
     }
 
+    /**
+     * @return string[]
+     */
     public static function splitStringInTwoByLastWhitespace(string $str): array
     {
-        return preg_split("/\s+(?=\S*+$)/", $str);
+        return preg_split("/\s+(?=\S*+$)/", $str) ?: [];
     }
 
     public static function romanToNumber(string $roman): int

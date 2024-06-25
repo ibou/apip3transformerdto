@@ -1,8 +1,0 @@
-{
-  "@context": "/api/contexts/QuestMonsterSize",
-  "@id": "@string@.contains('/api/quests').contains('/monsters').contains('/sizes/')",
-  "@type": "QuestMonsterSize",
-  "id": "@uuid@",
-  "size": "@string@",
-  "percentChance": "@integer@"
-}

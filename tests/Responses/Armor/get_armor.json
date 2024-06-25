@@ -1,0 +1,14 @@
+{
+  "@context": "/api/contexts/Armor",
+  "@id": "@string@.contains('/api/armors/')",
+  "@type": "Armor",
+  "id": "@uuid@",
+  "name": "@string@",
+  "description": "@string@",
+  "defense": "@integer@",
+  "rarity": "@integer@",
+  "imagesUrls": "@array@",
+  "slots": "@string@.contains('/api/armors').contains('/slots')",
+  "materials": "@string@.contains('/api/armors').contains('/materials')",
+  "resistances": "@string@.contains('/api/armors').contains('/resistances')"
+}

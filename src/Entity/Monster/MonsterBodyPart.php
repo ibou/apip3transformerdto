@@ -2,7 +2,7 @@
 
 namespace App\Entity\Monster;
 
-use App\Enum\Weapon\Extract;
+use App\Enum\Equipment\Weapon\Extract;
 use App\Repository\Monster\MonsterBodyPartRepository;
 use App\Trait\IdTrait;
 use Doctrine\Common\Collections\ArrayCollection;

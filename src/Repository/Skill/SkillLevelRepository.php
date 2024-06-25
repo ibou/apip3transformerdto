@@ -2,8 +2,8 @@
 
 namespace App\Repository\Skill;
 
-use App\Entity\Skill\SkillLevel;
-use App\Enum\Skill\SkillType;
+use App\Entity\Equipment\Skill\SkillLevel;
+use App\Enum\Equipment\Skill\SkillType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

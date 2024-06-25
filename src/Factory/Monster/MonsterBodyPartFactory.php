@@ -3,7 +3,7 @@
 namespace App\Factory\Monster;
 
 use App\Entity\Monster\MonsterBodyPart;
-use App\Enum\Weapon\Extract;
+use App\Enum\Equipment\Weapon\Extract;
 use Zenstruck\Foundry\ModelFactory;
 
 /**

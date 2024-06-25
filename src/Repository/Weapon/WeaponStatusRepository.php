@@ -2,7 +2,7 @@
 
 namespace App\Repository\Weapon;
 
-use App\Entity\Weapon\WeaponStatus;
+use App\Entity\Equipment\Weapon\WeaponStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

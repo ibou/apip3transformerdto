@@ -1,0 +1,16 @@
+{
+  "@context": "/api/contexts/ArmorResistance",
+  "@id": "@string@.contains('/api/armors').contains('/resistances')",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/armors').contains('/resistances/')",
+      "@type": "ArmorResistance",
+      "id": "@uuid@",
+      "element": "fireblight||waterblight||iceblight||thunderblight||dragonblight",
+      "value": "@integer@"
+    },
+    "@...@"
+  ]
+}

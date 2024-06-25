@@ -1,0 +1,16 @@
+{
+  "@context": "/api/contexts/ArmorSlot",
+  "@id": "@string@.contains('/api/armors').contains('/slots')",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/armors').contains('/slots/')",
+      "@type": "ArmorSlot",
+      "id": "@uuid@",
+      "type": "basic||rampage",
+      "quantity": "@integer@"
+    },
+    "@...@"
+  ]
+}

@@ -2,8 +2,8 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Skill\Skill;
-use App\Factory\Skill\SkillFactory;
+use App\Entity\Equipment\Skill\Skill;
+use App\Factory\Equipment\Skill\SkillFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 

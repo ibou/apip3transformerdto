@@ -1,0 +1,29 @@
+{
+  "@context": "/api/contexts/Armor",
+  "@id": "/api/armors",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/armors/')",
+      "@type": "Armor",
+      "id": "@uuid@",
+      "name": "@string@",
+      "description": "@string@",
+      "defense": "@integer@",
+      "rarity": "@integer@",
+      "imagesUrls": "@array@",
+      "slots": "@string@.contains('/api/armors').contains('/slots')",
+      "materials": "@string@.contains('/api/armors').contains('/materials')",
+      "resistances": "@string@.contains('/api/armors').contains('/resistances')"
+    },
+    "@...@"
+  ],
+  "hydra:view": {
+    "@id": "@string@.contains('/api/armors').contains('?page=1')",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "/api/armors?page=1",
+    "hydra:last": "@string@.contains('/api/armors').contains('?page=')",
+    "hydra:next": "@string@.contains('/api/armors').contains('?page=2')"
+  }
+  }

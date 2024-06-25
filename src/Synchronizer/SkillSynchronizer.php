@@ -2,9 +2,9 @@
 
 namespace App\Synchronizer;
 
-use App\Entity\Skill\Skill;
-use App\Entity\Skill\SkillLevel;
-use App\Enum\Skill\SkillType;
+use App\Entity\Equipment\Skill\Skill;
+use App\Entity\Equipment\Skill\SkillLevel;
+use App\Enum\Equipment\Skill\SkillType;
 use App\Model\Crawler\BaseCrawler;
 use App\Synchronizer\Enum\SkillSelector;
 use App\Utils\CrawlerUtils;

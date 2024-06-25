@@ -11,7 +11,7 @@ use ApiPlatform\Metadata\Link;
 use App\Api\State\Provider\EntityStateProvider;
 use App\Entity\Monster\Monster;
 use App\Entity\Monster\MonsterBodyPart;
-use App\Enum\Weapon\Extract;
+use App\Enum\Equipment\Weapon\Extract;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Uid\Uuid;
 

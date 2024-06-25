@@ -2,12 +2,12 @@
 
 namespace App\Synchronizer\Service;
 
+use App\Entity\Equipment\Skill\Skill;
+use App\Entity\Equipment\Skill\SkillLevel;
 use App\Entity\Item;
 use App\Entity\Monster\Monster;
 use App\Entity\Quest\Client;
-use App\Entity\Skill\Skill;
-use App\Entity\Skill\SkillLevel;
-use App\Enum\Skill\SkillType;
+use App\Enum\Equipment\Skill\SkillType;
 use App\Repository\Skill\SkillLevelRepository;
 use Doctrine\ORM\EntityManagerInterface;
 

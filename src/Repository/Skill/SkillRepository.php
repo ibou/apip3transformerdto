@@ -2,7 +2,7 @@
 
 namespace App\Repository\Skill;
 
-use App\Entity\Skill\Skill;
+use App\Entity\Equipment\Skill\Skill;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -1,8 +1,0 @@
-{
-  "@context": "/api/contexts/WeaponStatus",
-  "@id": "@string@.contains('/api/weapons').contains('/statuses/')",
-  "@type": "WeaponStatus",
-  "id": "@uuid@",
-  "status": "poison||paralysis||sleep||stun||blast||exhaust||fireblight||waterblight||iceblight||thunderblight||dragonblight",
-  "value": "@integer@"
-}

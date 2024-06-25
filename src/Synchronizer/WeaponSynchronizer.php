@@ -2,16 +2,16 @@
 
 namespace App\Synchronizer;
 
-use App\Entity\Weapon\Weapon;
-use App\Entity\Weapon\WeaponExtra;
-use App\Entity\Weapon\WeaponMaterial;
-use App\Entity\Weapon\WeaponSlot;
-use App\Entity\Weapon\WeaponStatus;
-use App\Enum\Skill\SkillType;
+use App\Entity\Equipment\Weapon\Weapon;
+use App\Entity\Equipment\Weapon\WeaponExtra;
+use App\Entity\Equipment\Weapon\WeaponMaterial;
+use App\Entity\Equipment\Weapon\WeaponSlot;
+use App\Entity\Equipment\Weapon\WeaponStatus;
+use App\Enum\Equipment\EquipmentMaterialType;
+use App\Enum\Equipment\EquipmentSlotType;
+use App\Enum\Equipment\Skill\SkillType;
+use App\Enum\Equipment\Weapon\WeaponType;
 use App\Enum\StatusEffect;
-use App\Enum\Weapon\WeaponMaterialType;
-use App\Enum\Weapon\WeaponSlotType;
-use App\Enum\Weapon\WeaponType;
 use App\Model\Crawler\BaseCrawler;
 use App\Synchronizer\Enum\WeaponSelector;
 use App\Utils\CrawlerUtils;
@@ -169,7 +169,7 @@ class WeaponSynchronizer extends AbstractSynchronizer
         foreach ($materialsDivs as $materialDiv) {
             $_crawler = new BaseCrawler($materialDiv);
             $type = Utils::cleanString($_crawler->findCurrentNodeBySelector('h2')?->textContent ?? '');
-            $enum = WeaponMaterialType::tryFromLabel($type);
+            $enum = EquipmentMaterialType::tryFromLabel($type);
 
             if (null === $enum) {
                 continue;
@@ -182,7 +182,7 @@ class WeaponSynchronizer extends AbstractSynchronizer
         }
     }
 
-    private function synchronizeMaterial(Weapon $weapon, \DOMNode $node, WeaponMaterialType $type): void
+    private function synchronizeMaterial(Weapon $weapon, \DOMNode $node, EquipmentMaterialType $type): void
     {
         $key = 0;
         $material = new WeaponMaterial();
@@ -222,7 +222,7 @@ class WeaponSynchronizer extends AbstractSynchronizer
 
         /* @var \DOMNode $ailmentSpan */
         foreach ($slotsSpans as $slotSpan) {
-            $type = WeaponSlotType::tryFromKiranicoLabel($slotSpan->textContent);
+            $type = EquipmentSlotType::tryFromKiranicoLabel($slotSpan->textContent);
 
             /** @var \DOMNode $child */
             foreach ($slotSpan->childNodes as $child) {
