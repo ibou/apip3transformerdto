@@ -3,6 +3,9 @@
 namespace App\Command;
 
 use App\Synchronizer\AbstractSynchronizer;
+use App\Synchronizer\ArmorSynchronizer;
+use App\Synchronizer\QuestSynchronizer;
+use App\Synchronizer\SkillSynchronizer;
 use App\Synchronizer\WeaponSynchronizer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -30,7 +33,9 @@ class SynchronizeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
+            ini_set('memory_limit', '-1');
             $this->synchronize();
+            ini_set('memory_limit', '128M');
 
             return Command::SUCCESS;
         } catch (\Exception $e) {
@@ -44,9 +49,7 @@ class SynchronizeCommand extends Command
     private function synchronize(): void
     {
         foreach ($this->synchronizers as $synchronizer) {
-            if ($synchronizer instanceof WeaponSynchronizer) {
-                $synchronizer->synchronize();
-            }
+            $synchronizer->synchronize();
         }
     }
 }

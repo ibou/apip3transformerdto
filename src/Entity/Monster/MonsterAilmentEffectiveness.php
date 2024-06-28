@@ -26,7 +26,7 @@ class MonsterAilmentEffectiveness
     private ?string $duration = null;
 
     #[ORM\ManyToOne(inversedBy: 'ailmentsEffectiveness')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Monster $monster = null;
 
     public function __construct(

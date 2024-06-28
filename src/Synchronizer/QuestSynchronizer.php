@@ -2,6 +2,7 @@
 
 namespace App\Synchronizer;
 
+use App\Entity\Quest\Client;
 use App\Entity\Quest\Quest;
 use App\Entity\Quest\QuestItem;
 use App\Entity\Quest\QuestMonster;
@@ -17,14 +18,14 @@ use App\Utils\Utils;
 
 class QuestSynchronizer extends AbstractSynchronizer
 {
-    private const int BATCH_SIZE = 50;
+    private const int BATCH_SIZE = 1;
     private const string ITEMS_LIST_PATH = 'data/quests';
 
     public function synchronize(): void
     {
         $this->ping();
         $this->helper()->disableSQLLog();
-        $this->helper()->cleanEntitiesData( // FIXME cascade
+        $this->helper()->cleanEntitiesData(
             QuestMonsterArea::class,
             QuestMonsterSize::class,
             QuestMonsterAttribute::class,
@@ -40,26 +41,21 @@ class QuestSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(QuestType $type): void
     {
-        $this->logger()->info(\sprintf('>>> Quest : start sync "%s"', $type->label()));
-
-        $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->kiranicoView());
-        $crawler = new BaseCrawler($url);
-
+        $crawler = new BaseCrawler(\sprintf('%s?view=%s', $this->getListUrl(), $type->kiranicoView()));
         $nodes = $crawler->findNodesBySelector(QuestSelector::LIST_A->value);
-        $crawler->clear();
 
+        $this->startProgressBar($nodes->count(), \sprintf('Quest > "%s"', $type->label()));
         foreach ($nodes as $i => $node) {
             $this->synchronizeQuest($node, $type);
+            $this->advanceProgressBar();
 
             if (0 === $i % self::BATCH_SIZE) {
-                $this->logger()->info(\sprintf('... ... ... %d / %d', $i, $nodes->count()));
                 $this->flushAndClear();
             }
         }
 
-        $this->logger()->info(\sprintf('... ... ... %d / %d', $nodes->count(), $nodes->count()));
-        $this->logger()->info(Utils::getMemoryConsumption());
         $this->flushAndClear();
+        $this->finishProgressBar();
     }
 
     private function synchronizeQuest(\DOMNode $node, QuestType $type): void
@@ -70,26 +66,31 @@ class QuestSynchronizer extends AbstractSynchronizer
         }
 
         $crawler = new BaseCrawler($href);
-        $titleH1 = $crawler->findCurrentNodeBySelector(QuestSelector::DETAIL_TITLE_H1->value);
-
-        if (null === $titleH1?->textContent) {
-            return; // unprocessable
-        }
 
         $quest = new Quest();
         $quest->setType($type);
-        $quest->setName(Utils::cleanString($titleH1->textContent));
 
+        $this->synchronizeName($quest, $crawler);
         $this->synchronizeClientAndDescription($quest, $crawler);
         $this->synchronizeObjectiveHrpMrp($quest, $crawler);
         $this->synchronizeFailureConditions($quest, $crawler);
         $this->synchronizeMonsters($quest, $crawler);
         $this->synchronizeItems($quest, $crawler);
 
-        $crawler->clear();
-        unset($crawler);
+        if (0 === $this->validator()->validate($quest)->count()) {
+            $this->em()->persist($quest);
+        }
+    }
 
-        $this->em()->persist($quest);
+    private function synchronizeName(Quest $quest, BaseCrawler $crawler): void
+    {
+        $nameH1 = $crawler->findCurrentNodeBySelector(QuestSelector::DETAIL_NAME_H1->value);
+        if (null === $nameH1) {
+            return; // unprocessable;
+        }
+
+        $name = Utils::cleanString($nameH1->textContent);
+        $quest->setName($name);
     }
 
     private function synchronizeClientAndDescription(Quest $quest, BaseCrawler $crawler): void
@@ -100,6 +101,13 @@ class QuestSynchronizer extends AbstractSynchronizer
         $clientName = $descriptionAndClient[0] ?? null;
         if (!empty($clientName)) {
             $client = $this->cache()->findClient($clientName);
+            if (null === $client) {
+                $client = new Client();
+                $client->setName($clientName);
+
+                $this->cache()->registerClient($client);
+            }
+
             $quest->setClient($client);
         }
 
@@ -162,8 +170,6 @@ class QuestSynchronizer extends AbstractSynchronizer
 
             $this->synchronizeMonsterAttributes($quest, $childNode);
         }
-
-        unset($monstersTbody);
     }
 
     private function synchronizeMonsterAttributes(Quest $quest, \DOMNode $node): void
@@ -187,8 +193,6 @@ class QuestSynchronizer extends AbstractSynchronizer
 
                 $questMonster = $quest->findOrCreateMonster($monster);
                 $questMonster->addAttribute($attribute);
-
-                $this->em()->persist($questMonster);
             }
 
             match ($key) {
@@ -261,8 +265,6 @@ class QuestSynchronizer extends AbstractSynchronizer
 
             $questMonster->addSize($size);
         }
-
-        unset($monsterSizesTbody);
     }
 
     private function synchronizeMonsterAreas(QuestMonster $questMonster, BaseCrawler $crawler, int $position): void
@@ -297,8 +299,6 @@ class QuestSynchronizer extends AbstractSynchronizer
 
             $questMonster->addArea($area);
         }
-
-        unset($monsterAreasTbody);
     }
 
     private function synchronizeItems(Quest $quest, BaseCrawler $crawler): void
@@ -374,13 +374,12 @@ class QuestSynchronizer extends AbstractSynchronizer
             ++$key;
         }
 
-        $this->em()->persist($questItem);
         $quest->addItem($questItem);
     }
 
     private function getListUrl(): string
     {
-        return \sprintf('%s/%s', $this->getKiranicoUrl(), self::ITEMS_LIST_PATH);
+        return \sprintf('%s/%s', $this->kiranicoUrl(), self::ITEMS_LIST_PATH);
     }
 
     public static function getDefaultPriority(): int

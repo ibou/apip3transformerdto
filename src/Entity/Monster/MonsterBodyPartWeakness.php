@@ -14,7 +14,7 @@ class MonsterBodyPartWeakness
     use IdTrait;
 
     #[ORM\ManyToOne(inversedBy: 'weaknesses')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?MonsterBodyPart $part = null;
 
     #[ORM\Column(options: ['default' => 0])]

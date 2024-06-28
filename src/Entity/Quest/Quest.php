@@ -12,18 +12,24 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestRepository::class)]
+#[UniqueEntity(['name', 'type'])]
 class Quest
 {
     use IdTrait;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Assert\Positive]
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
     private int $level = 1;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?QuestType $type = null;
 
@@ -37,9 +43,11 @@ class Quest
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $objective = null;
 
+    #[Assert\PositiveOrZero]
     #[ORM\Column(options: ['default' => 0])]
     private int $hrp = 0;
 
+    #[Assert\PositiveOrZero]
     #[ORM\Column(options: ['default' => 0])]
     private int $mrp = 0;
 
@@ -49,6 +57,7 @@ class Quest
     /**
      * @var ArrayCollection<int, QuestMonster>
      */
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'quest', targetEntity: QuestMonster::class, cascade: ['ALL'], orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $monsters;
@@ -56,6 +65,7 @@ class Quest
     /**
      * @var ArrayCollection<int, QuestItem>
      */
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'quest', targetEntity: QuestItem::class, cascade: ['ALL'], orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $items;

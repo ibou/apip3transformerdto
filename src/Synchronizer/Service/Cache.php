@@ -69,7 +69,7 @@ class Cache
         return $client;
     }
 
-    private function registerClient(Client $client): void
+    public function registerClient(Client $client): void
     {
         $this->_clients[$client->getName()] = $client;
     }

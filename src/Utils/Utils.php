@@ -23,14 +23,9 @@ class Utils
         return \trim($str);
     }
 
-    public static function getMemoryConsumption(): string
+    public static function stringToInt(string $str): int
     {
-        $memory = \memory_get_usage(true) / 1024 / 1024;
-        $peakMemory = \memory_get_peak_usage(true) / 1024 / 1024;
-
-        return 'Memory consumption '.\implode(', ', [
-            'mem: '.$memory.'MB', 'peak: '.$peakMemory.'MB',
-        ]);
+        return \intval(Utils::cleanString($str));
     }
 
     public static function replaceMultipleSpacesByOne(string $str): string

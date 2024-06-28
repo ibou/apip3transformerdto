@@ -5,20 +5,24 @@ namespace App\Entity\Quest;
 use App\Repository\Quest\QuestMonsterAreaRepository;
 use App\Trait\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestMonsterAreaRepository::class)]
 class QuestMonsterArea
 {
     use IdTrait;
 
+    #[Assert\Positive]
     #[ORM\Column]
     private ?int $numero = null;
 
+    #[Assert\Positive]
     #[ORM\Column]
     private ?int $percentChance = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'areas')]
-    #[ORM\JoinColumn(name: 'quest_monster_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'quest_monster_id', nullable: false, onDelete: 'CASCADE')]
     private ?QuestMonster $monster = null;
 
     public function getNumero(): ?int

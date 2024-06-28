@@ -11,25 +11,30 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WeaponRepository::class)]
-#[UniqueEntity('name')]
+#[UniqueEntity(['name', 'type'])]
 class Weapon
 {
     use IdTrait;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank]
+    #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?WeaponType $type = null;
 
+    #[Assert\Positive]
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $attack = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $defenseBonus = null;
 
+    #[Assert\Positive]
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $rarity = null;
 
@@ -48,30 +53,35 @@ class Weapon
     /**
      * @var ArrayCollection<int, WeaponSlot>
      */
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'weapon', targetEntity: WeaponSlot::class, cascade: ['ALL'], orphanRemoval: true)]
     private Collection $slots;
 
     /**
      * @var ArrayCollection<int, WeaponMaterial>
      */
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'weapon', targetEntity: WeaponMaterial::class, cascade: ['ALL'], orphanRemoval: true)]
     private Collection $materials;
 
     /**
      * @var ArrayCollection<int, WeaponStatus>
      */
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'weapon', targetEntity: WeaponStatus::class, cascade: ['ALL'], orphanRemoval: true)]
     private Collection $statuses;
 
     /**
      * @var ArrayCollection<int, WeaponExtra>
      */
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'weapon', targetEntity: WeaponExtra::class, cascade: ['ALL'], orphanRemoval: true)]
     private Collection $extras;
 
     /**
      * @var Collection<int, SkillLevel>
      */
+    #[Assert\Valid]
     #[ORM\ManyToMany(targetEntity: SkillLevel::class, inversedBy: 'weapons')]
     private Collection $skills;
 

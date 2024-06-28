@@ -8,23 +8,27 @@ use App\Trait\IdTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestMonsterRepository::class)]
 class QuestMonster
 {
     use IdTrait;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'monsters')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     protected ?Quest $quest = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     protected ?Monster $monster = null;
 
     /**
      * @var Collection<int, QuestMonsterAttribute>
      */
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'monster', targetEntity: QuestMonsterAttribute::class, cascade: ['ALL'], orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $attributes;
@@ -32,6 +36,7 @@ class QuestMonster
     /**
      * @var Collection<int, QuestMonsterSize>
      */
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'monster', targetEntity: QuestMonsterSize::class, cascade: ['ALL'], orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $sizes;
@@ -39,6 +44,7 @@ class QuestMonster
     /**
      * @var Collection<int, QuestMonsterArea>
      */
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'monster', targetEntity: QuestMonsterArea::class, cascade: ['ALL'], orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $areas;

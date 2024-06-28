@@ -7,20 +7,24 @@ use App\Repository\Equipment\Armor\ArmorResistanceRepository;
 use App\Trait\IdTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ArmorResistanceRepository::class)]
 class ArmorResistance
 {
     use IdTrait;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?StatusEffect $element = null;
 
+    #[Assert\PositiveOrZero]
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $value = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'resistances')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Armor $armor = null;
 
     public function getElement(): ?StatusEffect

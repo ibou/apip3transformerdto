@@ -19,14 +19,14 @@ use App\Utils\Utils;
 
 class MonsterSynchronizer extends AbstractSynchronizer
 {
+    public const string ITEMS_LIST_PATH = 'data/monsters';
     private const int BATCH_SIZE = 25;
-    private const string ITEMS_LIST_PATH = 'data/monsters';
 
     public function synchronize(): void
     {
         $this->ping();
         $this->helper()->disableSQLLog();
-        $this->helper()->cleanEntitiesData( // FIXME cascade
+        $this->helper()->cleanEntitiesData(
             MonsterAilmentEffectiveness::class,
             MonsterBodyPartWeakness::class,
             MonsterBodyPart::class,
@@ -41,33 +41,28 @@ class MonsterSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(MonsterType $type): void
     {
-        $this->logger()->info(\sprintf('>>> Monster : start sync "%s"', $type->label()));
-
-        $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->value);
-        $crawler = new BaseCrawler($url);
-
+        $crawler = new BaseCrawler(\sprintf('%s?view=%s', $this->getListUrl(), $type->value));
         $nodes = $crawler->findNodesBySelector(MonsterSelector::LIST_DIV->value);
-        $crawler->clear();
 
+        $this->startProgressBar($nodes->count(), \sprintf('Monster > "%s"', $type->label()));
         foreach ($nodes as $i => $node) {
             $this->synchronizeMonster($node, $type);
+            $this->advanceProgressBar();
 
             if (0 === $i % self::BATCH_SIZE) {
-                $this->logger()->info(\sprintf('... ... ... %d / %d', $i, $nodes->count()));
                 $this->flushAndClear();
             }
         }
 
-        $this->logger()->info(\sprintf('... ... ... %d / %d', $nodes->count(), $nodes->count()));
-        $this->logger()->info(Utils::getMemoryConsumption());
         $this->flushAndClear();
+        $this->finishProgressBar();
     }
 
     private function synchronizeMonster(\DOMNode $node, MonsterType $type): void
     {
-        $crawler = new BaseCrawler($node);
+        $listCrawler = new BaseCrawler($node);
 
-        $a = $crawler->findCurrentNodeBySelector(MonsterSelector::LIST_A->value);
+        $a = $listCrawler->findCurrentNodeBySelector(MonsterSelector::LIST_A->value);
         if (null === $a) {
             return; // unprocessable
         }
@@ -77,28 +72,52 @@ class MonsterSynchronizer extends AbstractSynchronizer
             return; // unprocessable
         }
 
-        $imageImg = $crawler->findCurrentNodeBySelector(MonsterSelector::LIST_IMG->value);
-        $crawler->clear();
-
         $crawler = new BaseCrawler($href);
-        $titleH1 = $crawler->findCurrentNodeBySelector(MonsterSelector::DETAIL_TITLE_H1->value);
-        $descriptionP = $crawler->findCurrentNodeBySelector(MonsterSelector::DETAIL_DESCRIPTION_P->value);
-
-        if (null === $titleH1?->textContent) {
-            return; // unprocessable
-        }
 
         $monster = new Monster();
         $monster->setType($type);
-        $monster->setName(Utils::cleanString($titleH1->textContent));
-        $monster->setDescription($descriptionP ? Utils::cleanString($descriptionP->textContent) : null);
-        $monster->setImageUrl($imageImg ? CrawlerUtils::findAttributeByName($imageImg, 'src') : null);
 
+        $this->synchronizeName($monster, $crawler);
+        $this->synchronizeDescription($monster, $crawler);
+        $this->synchronizeImagesUrls($monster, $listCrawler);
         $this->synchronizePhysiology($monster, $crawler);
         $this->synchronizeAilmentsEffectiveness($monster, $crawler);
         $this->synchronizeItems($monster, $crawler);
 
         $this->em()->persist($monster);
+    }
+
+    private function synchronizeName(Monster $monster, BaseCrawler $crawler): void
+    {
+        $nameH1 = $crawler->findCurrentNodeBySelector(MonsterSelector::DETAIL_NAME_H1->value);
+        if (null === $nameH1) {
+            return; // unprocessable;
+        }
+
+        $name = Utils::cleanString($nameH1->textContent);
+        $monster->setName($name);
+    }
+
+    private function synchronizeDescription(Monster $monster, BaseCrawler $crawler): void
+    {
+        $descriptionP = $crawler->findCurrentNodeBySelector(MonsterSelector::DETAIL_DESCRIPTION_P->value);
+        if (null === $descriptionP) {
+            return; // unprocessable;
+        }
+
+        $description = Utils::cleanString($descriptionP->textContent);
+        $monster->setDescription($description);
+    }
+
+    private function synchronizeImagesUrls(Monster $monster, BaseCrawler $crawler): void
+    {
+        $imageImg = $crawler->findCurrentNodeBySelector(MonsterSelector::LIST_IMG->value);
+        if (null === $imageImg) {
+            return;
+        }
+
+        $src = CrawlerUtils::findAttributeByName($imageImg, 'src');
+        $monster->setImageUrl($src);
     }
 
     private function synchronizePhysiology(Monster $monster, BaseCrawler $crawler): void
@@ -321,7 +340,7 @@ class MonsterSynchronizer extends AbstractSynchronizer
 
     private function getListUrl(): string
     {
-        return \sprintf('%s/%s', $this->getKiranicoUrl(), self::ITEMS_LIST_PATH);
+        return \sprintf('%s/%s', $this->kiranicoUrl(), self::ITEMS_LIST_PATH);
     }
 
     public static function getDefaultPriority(): int

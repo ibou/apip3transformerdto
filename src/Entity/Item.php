@@ -18,19 +18,20 @@ class Item
 {
     use IdTrait;
 
+    #[Assert\NotNull]
     #[ORM\Column(type: Types::STRING, enumType: ItemType::class)]
-    #[Assert\NotBlank]
     private ?ItemType $type = null;
 
-    #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[Assert\Url]
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Url()]
     private ?string $imageUrl = null;
 
     public function getName(): ?string

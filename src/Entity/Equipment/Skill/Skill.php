@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SkillRepository::class)]
 #[UniqueEntity(fields: ['name', 'type'])]
@@ -17,9 +18,11 @@ class Skill
 {
     use IdTrait;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255, options: ['default' => SkillType::BASIC])]
     private SkillType $type = SkillType::BASIC;
 
@@ -29,6 +32,7 @@ class Skill
     /**
      * @var ArrayCollection<int, SkillLevel>
      */
+    #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'skill', targetEntity: SkillLevel::class, cascade: ['ALL'], orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Collection $levels;

@@ -6,6 +6,7 @@ use App\Repository\Quest\QuestMonsterSizeRepository;
 use App\Trait\IdTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestMonsterSizeRepository::class)]
 class QuestMonsterSize
@@ -15,11 +16,13 @@ class QuestMonsterSize
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
     private ?string $size = null;
 
+    #[Assert\Positive]
     #[ORM\Column]
     private ?int $percentChance = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'sizes')]
-    #[ORM\JoinColumn(name: 'quest_monster_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'quest_monster_id', nullable: false, onDelete: 'CASCADE')]
     private ?QuestMonster $monster = null;
 
     public function getSize(): ?string

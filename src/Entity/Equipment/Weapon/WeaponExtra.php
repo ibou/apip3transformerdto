@@ -5,12 +5,14 @@ namespace App\Entity\Equipment\Weapon;
 use App\Repository\Weapon\WeaponExtraRepository;
 use App\Trait\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WeaponExtraRepository::class)]
 class WeaponExtra
 {
     use IdTrait;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -20,8 +22,9 @@ class WeaponExtra
     #[ORM\Column(nullable: true)]
     private ?int $value = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'extras')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Weapon $weapon = null;
 
     public function getName(): ?string

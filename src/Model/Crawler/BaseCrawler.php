@@ -10,7 +10,7 @@ class BaseCrawler
 
     public function __construct(string|\DOMNode $node)
     {
-        $context = stream_context_create([ // FIXME à creuser si OK
+        $context = stream_context_create([
             'ssl' => [
                 'verify_peer' => false,
                 'verify_peer_name' => false,
@@ -43,11 +43,11 @@ class BaseCrawler
 
     public function findNodeBySelectorAndKey(string $selector, int $key): ?\DOMNode
     {
-        return $this->findNodesBySelector($selector)->offsetGet($key);
-    }
+        $nodes = $this->findNodesBySelector($selector);
+        if ($nodes->offsetExists($key)) {
+            return $this->findNodesBySelector($selector)->offsetGet($key);
+        }
 
-    public function clear(): void
-    {
-        $this->crawler?->clear();
+        return null;
     }
 }

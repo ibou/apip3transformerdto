@@ -7,20 +7,24 @@ use App\Repository\Weapon\WeaponStatusRepository;
 use App\Trait\IdTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WeaponStatusRepository::class)]
 class WeaponStatus
 {
     use IdTrait;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255, enumType: StatusEffect::class)]
     private ?StatusEffect $status = null;
 
+    #[Assert\Positive]
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $value = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'statuses')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Weapon $weapon = null;
 
     public function getStatus(): ?StatusEffect

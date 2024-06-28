@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class WeaponMaterial extends EquipmentMaterial
 {
     #[ORM\ManyToOne(inversedBy: 'materials')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Weapon $weapon = null;
 
     public function getWeapon(): ?Weapon

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class WeaponSlot extends EquipmentSlot
 {
     #[ORM\ManyToOne(inversedBy: 'slots')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Weapon $weapon = null;
 
     public function getWeapon(): ?Weapon

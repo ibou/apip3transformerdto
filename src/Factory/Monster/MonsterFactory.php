@@ -12,15 +12,13 @@ use Zenstruck\Foundry\ModelFactory;
  */
 final class MonsterFactory extends ModelFactory
 {
-    private const string MONSTER_URL = 'http://cdn.kiranico.net/file/kiranico/mhrise-web/images/icons/em132_05.png';
-
     protected function getDefaults(): array
     {
         return [
             'name' => self::faker()->unique()->name,
             'type' => self::faker()->randomElement(MonsterType::cases()),
             'description' => self::faker()->text(255),
-            'imageUrl' => self::MONSTER_URL,
+            'imageUrl' => self::faker()->imageUrl,
         ];
     }
 

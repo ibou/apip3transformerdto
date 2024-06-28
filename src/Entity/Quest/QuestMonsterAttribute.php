@@ -6,16 +6,19 @@ use App\Repository\Quest\QuestMonsterAttributeRepository;
 use App\Trait\IdTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestMonsterAttributeRepository::class)]
 class QuestMonsterAttribute
 {
     use IdTrait;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'attributes')]
-    #[ORM\JoinColumn(name: 'quest_monster_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'quest_monster_id', nullable: false, onDelete: 'CASCADE')]
     private ?QuestMonster $monster = null;
 
+    #[Assert\Positive]
     #[ORM\Column]
     private ?int $nbPlayers = null;
 

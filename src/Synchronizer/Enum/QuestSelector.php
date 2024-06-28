@@ -5,7 +5,7 @@ namespace App\Synchronizer\Enum;
 enum QuestSelector: string
 {
     case LIST_A = 'div.overflow-hidden tbody a';
-    case DETAIL_TITLE_H1 = 'h1.font-display.text-3xl';
+    case DETAIL_NAME_H1 = 'h1';
     case DETAIL_DESCRIPTION_P = 'header.mb-9.space-y-1 p:last-of-type';
     case DETAIL_OBJECTIVE_HRP_MRP_FAILURE_CONDITIONS_DIV = 'dl.mt-5.grid.grid-cols-1 dd > div';
 

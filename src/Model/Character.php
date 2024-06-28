@@ -4,10 +4,12 @@ namespace App\Model;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\MappedSuperclass]
 class Character
 {
+    #[Assert\NotBlank]
     #[ORM\Column(type: Types::STRING)]
     protected ?string $name = null;
 

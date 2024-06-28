@@ -17,7 +17,7 @@ class MonsterBodyPart
     use IdTrait;
 
     #[ORM\ManyToOne(inversedBy: 'bodyParts')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Monster $monster = null;
 
     #[ORM\Column(nullable: true, options: ['default' => 0])]

@@ -18,7 +18,7 @@ help: ## Outputs this help screen
 	@grep -E '(^[a-zA-Z0-9\./_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
 ## —— Docker 🐳 ————————————————————————————————————————————————————————————————
-dc-install: dc-down dc-start vendor db-reset-f importmap-install ## Install project
+dc-install: dc-down dc-start vendor db-reset importmap-install ## Install project
 
 dc-build: ## Builds the Docker images
 	@$(DOCKER_COMP) build

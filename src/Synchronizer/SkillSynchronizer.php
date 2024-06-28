@@ -12,7 +12,7 @@ use App\Utils\Utils;
 
 class SkillSynchronizer extends AbstractSynchronizer
 {
-    private const int BATCH_SIZE = 50;
+    private const int BATCH_SIZE = 1;
     private const string SKILLS_LIST_PATH = 'data/skills';
     private const string RAMPAGE_SKILLS_LIST_PATH = 'data/rampage-skills';
 
@@ -28,24 +28,21 @@ class SkillSynchronizer extends AbstractSynchronizer
 
     private function synchronizeSkills(): void
     {
-        $this->logger()->info(\sprintf('>>> Skill : start sync "%s"', SkillType::BASIC->label()));
         $crawler = new BaseCrawler($this->getSkillsUrl());
-
         $nodes = $crawler->findNodesBySelector(SkillSelector::LIST_BASIC_SKILLS_ANCHOR->value);
-        $crawler->clear();
 
+        $this->startProgressBar($nodes->count(), \sprintf('Skill > "%s"', SkillType::BASIC->label()));
         foreach ($nodes as $i => $node) {
             $this->synchronizeSkill($node);
+            $this->advanceProgressBar();
 
             if (0 === $i % self::BATCH_SIZE) {
-                $this->logger()->info(\sprintf('... ... ... %d / %d', $i, $nodes->count()));
                 $this->flushAndClear();
             }
         }
 
-        $this->logger()->info(\sprintf('... ... ... %d / %d', $nodes->count(), $nodes->count()));
-        $this->logger()->info(Utils::getMemoryConsumption());
         $this->flushAndClear();
+        $this->finishProgressBar();
     }
 
     private function synchronizeSkill(\DOMNode $node): void
@@ -60,18 +57,35 @@ class SkillSynchronizer extends AbstractSynchronizer
         $skill = new Skill();
         $skill->setType(SkillType::BASIC);
 
-        $nameH1 = $crawler->findCurrentNodeBySelector(SkillSelector::DETAIL_NAME_H1->value);
-        if (null === $nameH1) {
-            return; // unprocessable
-        }
-        $skill->setName(Utils::cleanString($nameH1->textContent));
-
-        $descriptionP = $crawler->findCurrentNodeBySelector(SkillSelector::DETAIL_DESCRIPTION_P->value);
-        $skill->setDescription($descriptionP ? Utils::cleanString($descriptionP->textContent) : null);
-
+        $this->synchronizeName($skill, $crawler);
+        $this->synchronizeDescription($skill, $crawler);
         $this->synchronizeSkillLevels($skill, $crawler);
 
-        $this->em()->persist($skill);
+        if (0 === $this->validator()->validate($skill)->count()) {
+            $this->em()->persist($skill);
+        }
+    }
+
+    private function synchronizeName(Skill $skill, BaseCrawler $crawler): void
+    {
+        $nameH1 = $crawler->findCurrentNodeBySelector(SkillSelector::DETAIL_NAME_H1->value);
+        if (null === $nameH1) {
+            return; // unprocessable;
+        }
+
+        $name = Utils::cleanString($nameH1->textContent);
+        $skill->setName($name);
+    }
+
+    private function synchronizeDescription(Skill $skill, BaseCrawler $crawler): void
+    {
+        $descriptionP = $crawler->findCurrentNodeBySelector(SkillSelector::DETAIL_DESCRIPTION_P->value);
+        if (null === $descriptionP) {
+            return; // unprocessable
+        }
+
+        $description = Utils::cleanString($descriptionP->textContent);
+        $skill->setDescription($description);
     }
 
     private function synchronizeSkillLevels(Skill $skill, BaseCrawler $crawler): void
@@ -104,24 +118,21 @@ class SkillSynchronizer extends AbstractSynchronizer
 
     private function synchronizeRampageSkills(): void
     {
-        $this->logger()->info(\sprintf('>>> Skill : start sync "%s"', SkillType::RAMPAGE->label()));
         $crawler = new BaseCrawler($this->getRampageSkillsUrl());
-
         $nodes = $crawler->findNodesBySelector(SkillSelector::LIST_BASIC_SKILLS_ANCHOR->value);
-        $crawler->clear();
 
+        $this->startProgressBar($nodes->count(), \sprintf('Skill > "%s"', SkillType::RAMPAGE->label()));
         foreach ($nodes as $i => $node) {
             $this->synchronizeRampageSkill($node);
+            $this->advanceProgressBar();
 
             if (0 === $i % self::BATCH_SIZE) {
-                $this->logger()->info(\sprintf('... ... ... %d / %d', $i, $nodes->count()));
                 $this->flushAndClear();
             }
         }
 
-        $this->logger()->info(\sprintf('... ... ... %d / %d', $nodes->count(), $nodes->count()));
-        $this->logger()->info(Utils::getMemoryConsumption());
         $this->flushAndClear();
+        $this->finishProgressBar();
     }
 
     private function synchronizeRampageSkill(\DOMNode $node): void
@@ -159,17 +170,19 @@ class SkillSynchronizer extends AbstractSynchronizer
         }
         $skill->addLevel($skillLevel);
 
-        $this->em()->persist($skill);
+        if (0 === $this->validator()->validate($skill)->count()) {
+            $this->em()->persist($skill);
+        }
     }
 
     private function getSkillsUrl(): string
     {
-        return \sprintf('%s/%s', $this->getKiranicoUrl(), self::SKILLS_LIST_PATH);
+        return \sprintf('%s/%s', $this->kiranicoUrl(), self::SKILLS_LIST_PATH);
     }
 
     private function getRampageSkillsUrl(): string
     {
-        return \sprintf('%s/%s', $this->getKiranicoUrl(), self::RAMPAGE_SKILLS_LIST_PATH);
+        return \sprintf('%s/%s', $this->kiranicoUrl(), self::RAMPAGE_SKILLS_LIST_PATH);
     }
 
     public static function getDefaultPriority(): int

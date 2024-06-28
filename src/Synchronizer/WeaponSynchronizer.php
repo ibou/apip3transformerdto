@@ -41,57 +41,40 @@ class WeaponSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(WeaponType $type): void
     {
-        $this->logger()->info(\sprintf('>>> Weapon : start sync "%s"', $type->label()));
-
-        $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->kiranicoView());
-        $crawler = new BaseCrawler($url);
-
+        $crawler = new BaseCrawler(\sprintf('%s?view=%s', $this->getListUrl(), $type->kiranicoView()));
         $nodes = $crawler->findNodesBySelector(WeaponSelector::LIST_ITEM_TR->value);
-        $crawler->clear();
 
+        $this->startProgressBar($nodes->count(), \sprintf('Weapon > "%s"', $type->label()));
         foreach ($nodes as $i => $node) {
             $this->synchronizeWeapon($node, $type);
+            $this->advanceProgressBar();
 
             if (0 === $i % self::BATCH_SIZE) {
-                $this->logger()->info(\sprintf('... ... ... %d / %d', $i, $nodes->count()));
                 $this->flushAndClear();
             }
         }
 
-        $this->logger()->info(\sprintf('... ... ... %d / %d', $nodes->count(), $nodes->count()));
-        $this->logger()->info(Utils::getMemoryConsumption());
         $this->flushAndClear();
+        $this->finishProgressBar();
     }
 
     private function synchronizeWeapon(\DOMNode $node, WeaponType $type): void
     {
-        $crawler = new BaseCrawler($node);
+        $listCrawler = new BaseCrawler($node);
 
-        $raritySmall = $crawler->findCurrentNodeBySelector(WeaponSelector::LIST_ITEM_RARITY_SMALL->value);
-        if (null === $raritySmall) {
-            return;
-        }
-
-        $rarity = Utils::cleanString($raritySmall->textContent);
-
-        $anchor = $crawler->findCurrentNodeBySelector(WeaponSelector::LIST_ITEM_ANCHOR->value);
+        $anchor = $listCrawler->findCurrentNodeBySelector(WeaponSelector::LIST_ITEM_ANCHOR->value);
         $href = CrawlerUtils::findAttributeByName($anchor, 'href');
         if (null === $href) {
             return; // unprocessable
         }
 
         $crawler = new BaseCrawler($href);
+
         $weapon = new Weapon();
         $weapon->setType($type);
-        $weapon->setRarity(\intval(\str_replace('Rare ', '', $rarity))); // only in index view
 
+        $this->synchronizeRarity($weapon, $listCrawler);
         $this->synchronizeName($weapon, $crawler);
-        if (null === $weapon->getName()) {
-            $this->logger()->warning($href);
-
-            return;
-        }
-
         $this->synchronizeImages($weapon, $crawler);
         $this->synchronizeAttack($weapon, $crawler);
         $this->synchronizeMaterials($weapon, $crawler);
@@ -125,19 +108,30 @@ class WeaponSynchronizer extends AbstractSynchronizer
 
         $this->synchronizeSkills($weapon, $crawler);
 
-        $this->em()->persist($weapon);
+        if (0 === $this->validator()->validate($weapon)->count()) {
+            $this->em()->persist($weapon);
+        }
+    }
 
-        $crawler->clear();
+    private function synchronizeRarity(Weapon $weapon, BaseCrawler $crawler): void
+    {
+        $raritySmall = $crawler->findCurrentNodeBySelector(WeaponSelector::LIST_ITEM_RARITY_SMALL->value);
+        if (null === $raritySmall) {
+            return;
+        }
+
+        $rarity = Utils::stringToInt(\str_replace('Rare ', '', $raritySmall->textContent));
+        $weapon->setRarity($rarity);
     }
 
     private function synchronizeName(Weapon $weapon, BaseCrawler $crawler): void
     {
         $nameH1 = $crawler->findCurrentNodeBySelector(WeaponSelector::DETAIL_H1->value);
-        $name = $nameH1 ? Utils::cleanString($nameH1->textContent) : null;
-        if (null === $name) {
+        if (null === $nameH1) {
             return; // unprocessable
         }
 
+        $name = Utils::cleanString($nameH1->textContent);
         $weapon->setName($name);
     }
 
@@ -145,8 +139,7 @@ class WeaponSynchronizer extends AbstractSynchronizer
     {
         $imagesUrlsImg = $crawler->findNodesBySelector(WeaponSelector::DETAIL_IMG->value);
         foreach ($imagesUrlsImg as $image) {
-            $src = CrawlerUtils::findAttributeByName($image, 'src');
-            if (null === $src) {
+            if (null === $src = CrawlerUtils::findAttributeByName($image, 'src')) {
                 continue;
             }
 
@@ -157,7 +150,11 @@ class WeaponSynchronizer extends AbstractSynchronizer
     private function synchronizeAttack(Weapon $weapon, BaseCrawler $crawler): void
     {
         $attackDiv = $crawler->findCurrentNodeBySelector(WeaponSelector::DETAIL_ATTACK_DIV->value);
-        $attack = $attackDiv ? Utils::cleanString($attackDiv->textContent) : null;
+        if (null === $attackDiv) {
+            return; // unprocessable
+        }
+
+        $attack = Utils::cleanString($attackDiv->textContent);
         $weapon->setAttack(\intval($attack));
     }
 
@@ -169,14 +166,11 @@ class WeaponSynchronizer extends AbstractSynchronizer
         foreach ($materialsDivs as $materialDiv) {
             $_crawler = new BaseCrawler($materialDiv);
             $type = Utils::cleanString($_crawler->findCurrentNodeBySelector('h2')?->textContent ?? '');
-            $enum = EquipmentMaterialType::tryFromLabel($type);
-
-            if (null === $enum) {
+            if (null === $enum = EquipmentMaterialType::tryFromLabel($type)) {
                 continue;
             }
 
-            $trs = $_crawler->findNodesBySelector('tr');
-            foreach ($trs as $tr) {
+            foreach ($_crawler->findNodesBySelector('tr') as $tr) {
                 $this->synchronizeMaterial($weapon, $tr, $enum);
             }
         }
@@ -231,7 +225,7 @@ class WeaponSynchronizer extends AbstractSynchronizer
                 }
 
                 $src = CrawlerUtils::findAttributeByName($child, 'src');
-                $quantity = $src ? $this->helper()->getWeaponSlotQuantityFromImageSrc($src) : null;
+                $quantity = $src ? $this->helper()->getSlotQuantityFromImageSrc($src) : null;
                 if (null === $quantity) {
                     continue; // unprocessable
                 }
@@ -443,7 +437,7 @@ class WeaponSynchronizer extends AbstractSynchronizer
 
     private function getListUrl(): string
     {
-        return \sprintf('%s/%s', $this->getKiranicoUrl(), self::ITEMS_LIST_PATH);
+        return \sprintf('%s/%s', $this->kiranicoUrl(), self::ITEMS_LIST_PATH);
     }
 
     public static function getDefaultPriority(): int

@@ -7,26 +7,32 @@ use App\Enum\Quest\QuestItemType;
 use App\Repository\Quest\QuestItemRepository;
 use App\Trait\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestItemRepository::class)]
 class QuestItem
 {
     use IdTrait;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'items')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Quest $quest = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Item $item = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?QuestItemType $type = null;
 
+    #[Assert\Positive]
     #[ORM\Column]
     private ?int $quantity = null;
 
+    #[Assert\Positive]
     #[ORM\Column(nullable: true)]
     private ?int $percentChance = null;
 

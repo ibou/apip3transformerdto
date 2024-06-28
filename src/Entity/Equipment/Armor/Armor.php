@@ -16,6 +16,7 @@ class Armor
 {
     use IdTrait;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -29,7 +30,7 @@ class Armor
     /**
      * @var string[]
      */
-    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
+    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
     private array $imagesUrls = [];
 
     #[Assert\Positive]
@@ -39,25 +40,28 @@ class Armor
     /**
      * @var Collection<int, ArmorSlot>
      */
-    #[ORM\OneToMany(mappedBy: 'armor', targetEntity: ArmorSlot::class, orphanRemoval: true)]
+    #[Assert\Valid]
+    #[ORM\OneToMany(mappedBy: 'armor', targetEntity: ArmorSlot::class, cascade: ['ALL'], orphanRemoval: true)]
     private Collection $slots;
 
     /**
      * @var Collection<int, ArmorMaterial>
      */
-    #[ORM\OneToMany(mappedBy: 'armor', targetEntity: ArmorMaterial::class, orphanRemoval: true)]
+    #[Assert\Valid]
+    #[ORM\OneToMany(mappedBy: 'armor', targetEntity: ArmorMaterial::class, cascade: ['ALL'], orphanRemoval: true)]
     private Collection $materials;
 
     /**
      * @var Collection<int, SkillLevel>
      */
-    #[ORM\ManyToMany(targetEntity: SkillLevel::class, inversedBy: 'armors')]
+    #[ORM\ManyToMany(targetEntity: SkillLevel::class, inversedBy: 'armors', cascade: ['ALL'])]
     private Collection $skills;
 
     /**
      * @var Collection<int, ArmorResistance>
      */
-    #[ORM\OneToMany(mappedBy: 'armor', targetEntity: ArmorResistance::class, orphanRemoval: true)]
+    #[Assert\Valid]
+    #[ORM\OneToMany(mappedBy: 'armor', targetEntity: ArmorResistance::class, cascade: ['ALL'], orphanRemoval: true)]
     private Collection $resistances;
 
     public function __construct()
@@ -118,6 +122,13 @@ class Armor
     public function setImagesUrls(array $imagesUrls): Armor
     {
         $this->imagesUrls = $imagesUrls;
+
+        return $this;
+    }
+
+    public function addImageUrl(string $url): static
+    {
+        $this->imagesUrls[] = $url;
 
         return $this;
     }

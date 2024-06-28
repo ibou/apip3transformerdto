@@ -11,8 +11,8 @@ use App\Utils\Utils;
 
 class ItemSynchronizer extends AbstractSynchronizer
 {
-    private const int BATCH_SIZE = 50;
-    private const string ITEMS_LIST_PATH = 'data/items';
+    public const string ITEMS_LIST_PATH = 'data/items';
+    private const int BATCH_SIZE = 250;
 
     public function synchronize(): void
     {
@@ -27,32 +27,27 @@ class ItemSynchronizer extends AbstractSynchronizer
 
     private function synchronizeType(ItemType $type): void
     {
-        $this->logger()->info(\sprintf('>>> Item : start sync "%s"', $type->label()));
-
-        $url = \sprintf('%s?view=%s', $this->getListUrl(), $type->value);
-        $crawler = new BaseCrawler($url);
-
+        $crawler = new BaseCrawler(\sprintf('%s?view=%s', $this->getListUrl(), $type->value));
         $nodes = $crawler->findNodesBySelector(ItemSelector::LIST_DIV->value);
-        $crawler->clear();
 
+        $this->startProgressBar($nodes->count(), \sprintf('Item > "%s"', $type->label()));
         foreach ($nodes as $i => $node) {
             $this->synchronizeItem($node, $type);
+            $this->advanceProgressBar();
 
-            if (0 === $i % self::BATCH_SIZE) {
-                $this->logger()->info(\sprintf('... ... ... %d / %d', $i, $nodes->count()));
+            if (0 !== $i && 0 === $i % self::BATCH_SIZE) {
                 $this->flushAndClear();
             }
         }
 
-        $this->logger()->info(\sprintf('... ... ... %d / %d', $nodes->count(), $nodes->count()));
-        $this->logger()->info(Utils::getMemoryConsumption());
         $this->flushAndClear();
+        $this->finishProgressBar();
     }
 
     private function synchronizeItem(\DOMNode $node, ItemType $type): void
     {
-        $crawler = new BaseCrawler($node);
-        $a = $crawler->findCurrentNodeBySelector(ItemSelector::LIST_A->value);
+        $listCrawler = new BaseCrawler($node);
+        $a = $listCrawler->findCurrentNodeBySelector(ItemSelector::LIST_ANCHOR->value);
         if (null === $a) {
             return; // unprocessable
         }
@@ -62,29 +57,56 @@ class ItemSynchronizer extends AbstractSynchronizer
             return; // unprocessable
         }
 
-        $iconImg = $crawler->findCurrentNodeBySelector(ItemSelector::LIST_IMG->value);
-        $crawler->clear();
-
         $crawler = new BaseCrawler($href);
-        $titleH1 = $crawler->findCurrentNodeBySelector(ItemSelector::DETAIL_TITLE_H1->value);
-        $descriptionP = $crawler->findCurrentNodeBySelector(ItemSelector::DETAIL_DESCRIPTION_P->value);
-
-        if (null === $titleH1?->textContent) {
-            return; // unprocessable
-        }
 
         $item = new Item();
         $item->setType($type);
-        $item->setName(Utils::cleanString($titleH1->textContent));
-        $item->setDescription($descriptionP ? Utils::cleanString($descriptionP->textContent) : null);
-        $item->setImageUrl($iconImg ? CrawlerUtils::findAttributeByName($iconImg, 'src') : null);
 
-        $this->em()->persist($item);
+        $this->synchronizeName($item, $crawler);
+        $this->synchronizeDescription($item, $crawler);
+        $this->synchronizeImagesUrls($item, $listCrawler);
+
+        if (0 === $this->validator()->validate($item)->count()) {
+            $this->em()->persist($item);
+        }
+    }
+
+    private function synchronizeName(Item $item, BaseCrawler $crawler): void
+    {
+        $nameH1 = $crawler->findCurrentNodeBySelector(ItemSelector::DETAIL_NAME_H1->value);
+        if (null === $nameH1) {
+            return; // unprocessable
+        }
+
+        $name = Utils::cleanString($nameH1->textContent);
+        $item->setName($name);
+    }
+
+    private function synchronizeDescription(Item $item, BaseCrawler $crawler): void
+    {
+        $descriptionP = $crawler->findCurrentNodeBySelector(ItemSelector::DETAIL_DESCRIPTION_P->value);
+        if (null === $descriptionP) {
+            return; // unprocessable
+        }
+
+        $description = Utils::cleanString($descriptionP->textContent);
+        $item->setDescription($description);
+    }
+
+    private function synchronizeImagesUrls(Item $item, BaseCrawler $crawler): void
+    {
+        $node = $crawler->findCurrentNodeBySelector(ItemSelector::LIST_IMG->value);
+        $src = CrawlerUtils::findAttributeByName($node, 'src');
+        if (null === $src) {
+            return; // unprocessable
+        }
+
+        $item->setImageUrl($src);
     }
 
     private function getListUrl(): string
     {
-        return \sprintf('%s/%s', $this->getKiranicoUrl(), self::ITEMS_LIST_PATH);
+        return \sprintf('%s/%s', $this->kiranicoUrl(), self::ITEMS_LIST_PATH);
     }
 
     public static function getDefaultPriority(): int

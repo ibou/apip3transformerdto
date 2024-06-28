@@ -7,17 +7,24 @@ use App\Synchronizer\Service\Cache;
 use App\Utils\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AutoconfigureTag('app.synchronizer')]
 abstract class AbstractSynchronizer
 {
+    private ?ProgressBar $progressBar = null;
+
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $em,
         private readonly SynchronizerHelper $helper,
         private readonly Cache $cache,
+        private readonly ValidatorInterface $validator,
         private readonly string $kiranicoUrl
     ) {
     }
@@ -44,7 +51,37 @@ abstract class AbstractSynchronizer
         return $this->cache;
     }
 
-    protected function getKiranicoUrl(): string
+    protected function output(): OutputInterface
+    {
+        return new ConsoleOutput();
+    }
+
+    protected function validator(): ValidatorInterface
+    {
+        return $this->validator;
+    }
+
+    protected function startProgressBar(int $count, string $message): void
+    {
+        $this->output()->writeln($message);
+
+        $this->progressBar = new ProgressBar($this->output(), $count);
+        $this->progressBar->setFormat('debug');
+        $this->progressBar->start();
+    }
+
+    protected function advanceProgressBar(): void
+    {
+        $this->progressBar?->advance();
+    }
+
+    protected function finishProgressBar(): void
+    {
+        $this->progressBar?->finish();
+        $this->output()->writeln('');
+    }
+
+    protected function kiranicoUrl(): string
     {
         return $this->kiranicoUrl;
     }
@@ -62,12 +99,12 @@ abstract class AbstractSynchronizer
     protected function ping(): void
     {
         try {
-            if (!Utils::ping($this->getKiranicoUrl())) {
+            if (!Utils::ping($this->kiranicoUrl())) {
                 throw new ServiceUnavailableHttpException();
             }
         } catch (\Throwable $e) {
             $this->logger->critical(\sprintf('Ping failed: %s, message: %s',
-                $this->getKiranicoUrl(), $e->getMessage()));
+                $this->kiranicoUrl(), $e->getMessage()));
 
             throw $e;
         }

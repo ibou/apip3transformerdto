@@ -10,18 +10,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SkillLevelRepository::class)]
 class SkillLevel
 {
     use IdTrait;
 
+    #[Assert\PositiveOrZero]
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $level = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $effect = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'levels')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Skill $skill = null;
