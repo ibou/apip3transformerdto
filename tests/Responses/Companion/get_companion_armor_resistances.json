@@ -1,0 +1,16 @@
+{
+  "@context": "/api/contexts/CompanionArmorResistance",
+  "@id": "@string@.contains('/api/companions/armors/').contains('/resistances')",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/companions/armors/').contains('/resistances/')",
+      "@type": "CompanionArmorResistance",
+      "id": "@uuid@",
+      "element": "fireblight||waterblight||iceblight||thunderblight||dragonblight",
+      "value": "@integer@"
+    },
+    "@...@"
+  ]
+}

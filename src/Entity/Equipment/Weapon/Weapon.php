@@ -4,7 +4,7 @@ namespace App\Entity\Equipment\Weapon;
 
 use App\Entity\Equipment\Skill\SkillLevel;
 use App\Enum\Equipment\Weapon\WeaponType;
-use App\Repository\Weapon\WeaponRepository;
+use App\Repository\Equipment\Weapon\WeaponRepository;
 use App\Trait\IdTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

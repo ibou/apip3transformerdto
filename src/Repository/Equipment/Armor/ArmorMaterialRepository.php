@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Repository\Armor;
+namespace App\Repository\Equipment\Armor;
 
-use App\Entity\Equipment\Armor\ArmorResistance;
+use App\Entity\Equipment\Armor\ArmorMaterial;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ArmorResistance>
+ * @extends ServiceEntityRepository<ArmorMaterial>
  */
-class ArmorResistanceRepository extends ServiceEntityRepository
+class ArmorMaterialRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ArmorResistance::class);
+        parent::__construct($registry, ArmorMaterial::class);
     }
 
     //    /**
-    //     * @return ArmorResistance[] Returns an array of ArmorResistance objects
+    //     * @return ArmorMaterial[] Returns an array of ArmorMaterial objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class ArmorResistanceRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?ArmorResistance
+    //    public function findOneBySomeField($value): ?ArmorMaterial
     //    {
     //        return $this->createQueryBuilder('a')
     //            ->andWhere('a.exampleField = :val')

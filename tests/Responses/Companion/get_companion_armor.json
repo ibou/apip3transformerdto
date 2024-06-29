@@ -1,0 +1,10 @@
+{
+  "@context": "/api/contexts/CompanionArmor",
+  "@id": "@string@.contains('/api/companions/armors/')",
+  "@type": "CompanionArmor",
+  "id": "@uuid@",
+  "name": "@string@",
+  "companion": "palamute||palico",
+  "defense": "@integer@",
+  "resistances": "@string@.contains('/api/companions/armors/').contains('/resistances')"
+}

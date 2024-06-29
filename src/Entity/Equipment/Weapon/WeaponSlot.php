@@ -3,7 +3,7 @@
 namespace App\Entity\Equipment\Weapon;
 
 use App\Entity\Equipment\EquipmentSlot;
-use App\Repository\Weapon\WeaponSlotRepository;
+use App\Repository\Equipment\Weapon\WeaponSlotRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WeaponSlotRepository::class)]

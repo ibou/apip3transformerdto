@@ -3,10 +3,7 @@
 namespace App\Command;
 
 use App\Synchronizer\AbstractSynchronizer;
-use App\Synchronizer\ArmorSynchronizer;
-use App\Synchronizer\QuestSynchronizer;
-use App\Synchronizer\SkillSynchronizer;
-use App\Synchronizer\WeaponSynchronizer;
+use App\Synchronizer\CompanionEquipmentSynchronizer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -49,7 +46,9 @@ class SynchronizeCommand extends Command
     private function synchronize(): void
     {
         foreach ($this->synchronizers as $synchronizer) {
-            $synchronizer->synchronize();
+            if ($synchronizer instanceof CompanionEquipmentSynchronizer) {
+                $synchronizer->synchronize();
+            }
         }
     }
 }

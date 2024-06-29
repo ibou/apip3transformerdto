@@ -3,7 +3,7 @@
 namespace App\Entity\Equipment\Armor;
 
 use App\Entity\Equipment\Skill\SkillLevel;
-use App\Repository\Armor\ArmorRepository;
+use App\Repository\Equipment\Armor\ArmorRepository;
 use App\Trait\IdTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

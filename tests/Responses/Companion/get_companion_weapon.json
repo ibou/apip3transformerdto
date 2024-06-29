@@ -1,0 +1,14 @@
+{
+  "@context": "/api/contexts/CompanionWeapon",
+  "@id": "@string@.contains('/api/companions/weapons/')",
+  "@type": "CompanionWeapon",
+  "id": "@uuid@",
+  "companion": "palamute||palico",
+  "type": "severing||blunt",
+  "meleeAttack": "@integer@",
+  "rangedAttack": "@integer@",
+  "meleeAffinity": "@integer@||@null@",
+  "rangedAffinity": "@integer@||@null@",
+  "defenseBonus": "@integer@",
+  "statuses": "@string@.contains('/api/companions/weapons/').contains('/statuses')"
+}

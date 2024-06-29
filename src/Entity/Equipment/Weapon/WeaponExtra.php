@@ -2,7 +2,7 @@
 
 namespace App\Entity\Equipment\Weapon;
 
-use App\Repository\Weapon\WeaponExtraRepository;
+use App\Repository\Equipment\Weapon\WeaponExtraRepository;
 use App\Trait\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;

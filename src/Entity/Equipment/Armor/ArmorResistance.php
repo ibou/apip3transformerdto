@@ -2,54 +2,17 @@
 
 namespace App\Entity\Equipment\Armor;
 
-use App\Enum\StatusEffect;
 use App\Repository\Equipment\Armor\ArmorResistanceRepository;
-use App\Trait\IdTrait;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ArmorResistanceRepository::class)]
-class ArmorResistance
+class ArmorResistance extends \App\Entity\Equipment\ArmorResistance
 {
-    use IdTrait;
-
-    #[Assert\NotBlank]
-    #[ORM\Column(length: 255)]
-    private ?StatusEffect $element = null;
-
-    #[Assert\PositiveOrZero]
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $value = null;
-
     #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'resistances')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Armor $armor = null;
-
-    public function getElement(): ?StatusEffect
-    {
-        return $this->element;
-    }
-
-    public function setElement(?StatusEffect $element): ArmorResistance
-    {
-        $this->element = $element;
-
-        return $this;
-    }
-
-    public function getValue(): ?int
-    {
-        return $this->value;
-    }
-
-    public function setValue(int $value): static
-    {
-        $this->value = $value;
-
-        return $this;
-    }
 
     public function getArmor(): ?Armor
     {

@@ -1,0 +1,25 @@
+{
+  "@context": "/api/contexts/CompanionArmor",
+  "@id": "/api/companions/armors",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/companions/armors/')",
+      "@type": "CompanionArmor",
+      "id": "@uuid@",
+      "name": "@string@",
+      "companion": "palamute||palico",
+      "defense": "@integer@",
+      "resistances": "@string@.contains('/api/companions/armors/').contains('/resistances')"
+    },
+    "@...@"
+  ],
+  "hydra:view": {
+    "@id": "/api/companions/armors?page=1",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "/api/companions/armors?page=1",
+    "hydra:last": "@string@.contains('/api/companions/armors').contains('?page=')",
+    "hydra:next": "@string@.contains('/api/companions/armors').contains('?page=2')"
+  }
+  }

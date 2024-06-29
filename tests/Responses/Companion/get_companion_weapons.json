@@ -1,0 +1,29 @@
+{
+  "@context": "/api/contexts/CompanionWeapon",
+  "@id": "/api/companions/weapons",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/companions/weapons/')",
+      "@type": "CompanionWeapon",
+      "id": "@uuid@",
+      "companion": "palamute||palico",
+      "type": "severing||blunt",
+      "meleeAttack": "@integer@",
+      "rangedAttack": "@integer@",
+      "meleeAffinity": "@integer@||@null@",
+      "rangedAffinity": "@integer@||@null@",
+      "defenseBonus": "@integer@",
+      "statuses": "@string@.contains('/api/companions/weapons/').contains('/statuses')"
+    },
+    "@...@"
+  ],
+  "hydra:view": {
+    "@id": "/api/companions/weapons?page=1",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "/api/companions/weapons?page=1",
+    "hydra:last": "@string@.contains('/api/companions/weapons').contains('?page=')",
+    "hydra:next": "@string@.contains('/api/companions/weapons').contains('?page=2')"
+  }
+  }

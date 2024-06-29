@@ -3,7 +3,7 @@
 namespace App\Entity\Equipment\Armor;
 
 use App\Entity\Equipment\EquipmentMaterial;
-use App\Repository\Armor\ArmorMaterialRepository;
+use App\Repository\Equipment\Armor\ArmorMaterialRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 

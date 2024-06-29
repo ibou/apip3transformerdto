@@ -175,6 +175,14 @@ enum StatusEffect: string implements Labelized
     /**
      * @return StatusEffect[]
      */
+    public static function armorStatusesCases(): array
+    {
+        return self::elementsBlightsCases();
+    }
+
+    /**
+     * @return StatusEffect[]
+     */
     public static function monstersAilmentsCases(): array
     {
         return \array_merge(self::elementsBlightsCases(), self::ailmentsCases());

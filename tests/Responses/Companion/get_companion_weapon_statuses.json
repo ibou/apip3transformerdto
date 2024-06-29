@@ -1,0 +1,16 @@
+{
+  "@context": "/api/contexts/CompanionWeaponStatus",
+  "@id": "@string@.contains('/api/companions/weapons/').contains('/statuses')",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/companions/weapons/').contains('/statuses/')",
+      "@type": "CompanionWeaponStatus",
+      "id": "@uuid@",
+      "status": "poison||paralysis||sleep||stun||blast||exhaust||fireblight||waterblight||iceblight||thunderblight||dragonblight",
+      "value": "@integer@"
+    },
+    "@...@"
+  ]
+}

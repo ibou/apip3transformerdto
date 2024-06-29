@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Weapon;
+namespace App\Repository\Equipment\Weapon;
 
 use App\Entity\Equipment\Weapon\WeaponExtra;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

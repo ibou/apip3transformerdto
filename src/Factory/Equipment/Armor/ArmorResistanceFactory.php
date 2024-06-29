@@ -14,7 +14,7 @@ final class ArmorResistanceFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'element' => self::faker()->randomElement(StatusEffect::elementsBlightsCases()),
+            'element' => self::faker()->randomElement(StatusEffect::armorStatusesCases()),
             'value' => self::faker()->numberBetween(1, 100),
         ];
     }
