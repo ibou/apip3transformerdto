@@ -61,7 +61,7 @@ class SkillSynchronizer extends AbstractSynchronizer
         $this->synchronizeDescription($skill, $crawler);
         $this->synchronizeSkillLevels($skill, $crawler);
 
-        if (0 === $this->validator()->validate($skill)->count()) {
+        if ($this->isValid($skill)) {
             $this->em()->persist($skill);
         }
     }
@@ -170,7 +170,7 @@ class SkillSynchronizer extends AbstractSynchronizer
         }
         $skill->addLevel($skillLevel);
 
-        if (0 === $this->validator()->validate($skill)->count()) {
+        if ($this->isValid($skill)) {
             $this->em()->persist($skill);
         }
     }

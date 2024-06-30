@@ -77,7 +77,7 @@ class QuestSynchronizer extends AbstractSynchronizer
         $this->synchronizeMonsters($quest, $crawler);
         $this->synchronizeItems($quest, $crawler);
 
-        if (0 === $this->validator()->validate($quest)->count()) {
+        if ($this->isValid($quest)) {
             $this->em()->persist($quest);
         }
     }

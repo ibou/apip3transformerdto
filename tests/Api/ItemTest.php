@@ -16,7 +16,7 @@ class ItemTest extends BaseJsonApiTestCase
         $this->client?->request('GET', '/api/items');
 
         $response = $this->client?->getResponse() ?? new Response();
-        $this->assertResponse($response, 'get_items');
+        $this->assertResponse($response, 'Item/get_items');
     }
 
     #[Test]
@@ -27,6 +27,6 @@ class ItemTest extends BaseJsonApiTestCase
         $this->client?->request('GET', \sprintf('/api/items/%s', $item->getId()));
 
         $response = $this->client?->getResponse() ?? new Response();
-        $this->assertResponse($response, 'get_item');
+        $this->assertResponse($response, 'Item/get_item');
     }
 }

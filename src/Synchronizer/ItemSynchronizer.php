@@ -66,7 +66,7 @@ class ItemSynchronizer extends AbstractSynchronizer
         $this->synchronizeDescription($item, $crawler);
         $this->synchronizeImagesUrls($item, $listCrawler);
 
-        if (0 === $this->validator()->validate($item)->count()) {
+        if ($this->isValid($item)) {
             $this->em()->persist($item);
         }
     }

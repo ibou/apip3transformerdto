@@ -56,11 +56,6 @@ abstract class AbstractSynchronizer
         return new ConsoleOutput();
     }
 
-    protected function validator(): ValidatorInterface
-    {
-        return $this->validator;
-    }
-
     protected function startProgressBar(int $count, string $message): void
     {
         $this->output()->writeln($message);
@@ -108,6 +103,11 @@ abstract class AbstractSynchronizer
 
             throw $e;
         }
+    }
+
+    protected function isValid(object $entity): bool
+    {
+        return 0 === $this->validator->validate($entity)->count();
     }
 
     abstract public static function getDefaultPriority(): int;

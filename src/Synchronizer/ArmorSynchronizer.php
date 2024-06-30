@@ -72,7 +72,7 @@ class ArmorSynchronizer extends AbstractSynchronizer
         $this->synchronizeResistances($armor, $crawler);
         $this->synchronizeSkills($armor, $crawler);
 
-        if (0 === $this->validator()->validate($armor)->count()) {
+        if ($this->isValid($armor)) {
             $this->em()->persist($armor);
         }
     }

@@ -108,7 +108,7 @@ class WeaponSynchronizer extends AbstractSynchronizer
 
         $this->synchronizeSkills($weapon, $crawler);
 
-        if (0 === $this->validator()->validate($weapon)->count()) {
+        if ($this->isValid($weapon)) {
             $this->em()->persist($weapon);
         }
     }

@@ -36,6 +36,25 @@ class CrawlerUtils
         return null;
     }
 
+    /**
+     * @param list<\DOMNode> $nodes
+     *
+     * @return list<\DOMNode>
+     */
+    public static function filterNodes(iterable $nodes, string $nodeName): iterable
+    {
+        $filteredNodes = [];
+
+        /** @var \DOMNode $node */
+        foreach ($nodes as $node) {
+            if (self::is($node, $nodeName)) {
+                $filteredNodes[] = $node;
+            }
+        }
+
+        return $filteredNodes;
+    }
+
     public static function hasClass(\DOMNode $node, string $className): bool
     {
         $nodeClass = self::findAttributeByName($node, 'class') ?? '';

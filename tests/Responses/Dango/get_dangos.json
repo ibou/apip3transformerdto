@@ -1,0 +1,23 @@
+{
+  "@context": "/api/contexts/Dango",
+  "@id": "/api/kitchen/dangos",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": "@integer@",
+  "hydra:member": [
+    {
+      "@id": "@string@.contains('/api/kitchen/dangos/')",
+      "@type": "Dango",
+      "id": "@uuid@",
+      "name": "@string@",
+      "effects": "@array@"
+    },
+    "@...@"
+  ],
+  "hydra:view": {
+    "@id": "/api/kitchen/dangos?page=1",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "/api/kitchen/dangos?page=1",
+    "hydra:last": "@string@",
+    "hydra:next": "@string@"
+  }
+  }

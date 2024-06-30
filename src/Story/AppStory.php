@@ -10,6 +10,7 @@ use App\Factory\Equipment\Companion\CompanionWeaponFactory;
 use App\Factory\Equipment\Skill\SkillFactory;
 use App\Factory\Equipment\Weapon\WeaponFactory;
 use App\Factory\ItemFactory;
+use App\Factory\Kitchen\DangoFactory;
 use App\Factory\Monster\MonsterFactory;
 use App\Factory\Quest\QuestFactory;
 use Zenstruck\Foundry\Story;
@@ -29,5 +30,7 @@ final class AppStory extends Story
 
         CompanionArmorFactory::createMany(50);
         CompanionWeaponFactory::createMany(50);
+
+        DangoFactory::createMany(20);
     }
 }

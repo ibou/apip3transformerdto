@@ -78,7 +78,10 @@ class CompanionEquipmentSynchronizer extends AbstractSynchronizer
                 ++$key;
             }
 
-            $this->em()->persist($weapon);
+            if ($this->isValid($weapon)) {
+                $this->em()->persist($weapon);
+            }
+
             $this->advanceProgressBar();
         }
 
@@ -160,7 +163,10 @@ class CompanionEquipmentSynchronizer extends AbstractSynchronizer
                 ++$key;
             }
 
-            $this->em()->persist($armor);
+            if ($this->isValid($armor)) {
+                $this->em()->persist($armor);
+            }
+
             $this->advanceProgressBar();
         }
 

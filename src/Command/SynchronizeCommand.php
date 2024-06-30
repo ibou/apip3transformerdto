@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Synchronizer\AbstractSynchronizer;
-use App\Synchronizer\CompanionEquipmentSynchronizer;
+use App\Synchronizer\DangoSynchronizer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -46,7 +46,7 @@ class SynchronizeCommand extends Command
     private function synchronize(): void
     {
         foreach ($this->synchronizers as $synchronizer) {
-            if ($synchronizer instanceof CompanionEquipmentSynchronizer) {
+            if ($synchronizer instanceof DangoSynchronizer) {
                 $synchronizer->synchronize();
             }
         }
