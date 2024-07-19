@@ -1,74 +1,66 @@
 ## Name
 
-💀 Symfony skeleton
-
-## Context
-
-This is a personal project that I wanted to put in place to facilitate the start of my future project.
+KIRANICO API
 
 ## Description
 
-This project is a Symfony 6.3 / PHP 8.2 skeleton application to start new projects with a suite of tools already installed and configured.
+This project is an API that provides information about the game "Monster Hunter Rise" and its DLC, Sunbreak.
 
-This project contains : 
-- Symfony project configuration
-- Docker configuration
-- Makefile
-- Many tools for development
+## Context
 
-### Symfony project configuration
-
-It contains basic configuration of a symfony project generated with this command.
-Webpack Encore has been configured to support SCSS files, images and simple Javascript.
-
-A default controller (src/Controller/DefaultController.php) has been added with a classic Twig file renderer.
-
-### Docker configuration
-
-The docker configuration is based on a docker-compose.yml. This contains 3 services:
-- nginx
-- symfony
-- db
-
-The Symfony service is based on a Dockerfile (/docker/symfony/Dockerfile). This Dockerfile is built from the php:8.1-fpm-buster, to which I added :
-
-- Composer
-- Dev tools (Git / Zip)
-- NodeJS / Yarn
-- PHP extensions
-
-### Makefile
-
-To view all makefile commands :
-
-    make help
-
-### Outils
-
-Several tools have been installed to facilitate development, but also to check code quality.
-The Makefile contains a number of useful commands:
-
-    make cc (Empty the cache)
-    make test (Run tests)
-    make db-update (Update the project / the composer dependencies / the database schema)
-
-It also contains a command that lets you analyze code quality and ensure that conventions are respected:
-    make check
-
-This will check :
-- Correct code (PHP CS Fixer)
-- Code analysis (PHPStan & PHPSlam)
-- Validate database schema (php bin/console doctrine:schema:validate)
-- Run tests (PHP Unit)
+This is a personal project developed in my spare time. It has allowed me to further enhance my knowledge of API Platform and PHP/Symfony development in general. Several endpoints are available at /api.
 
 ## Installation
 
-With the Makefile, simply launch :
+To install the project, simply clone the repository and ensure you have `make` installed. Once done, run the following command at the root of the project:
 
-    make dc-install
+```sh
+make dc-install
+```
 
-To do this, you need to install [make](https://doc.ubuntu-fr.org/ubuntu-make).
+This will:
+
+1. Start the Docker containers
+2. Install the PHP dependencies
+3. Create the database
+
+## Technologies
+
+- PHP 8.3
+- Symfony 7.0
+- API Platform 3.3
+- PHPUnit 10
+
+## Usage
+
+To use the API, you can either rely on the fixtures or use the actual data. The fixtures can be loaded with the following command:
+
+```sh
+make db-fixtures-append
+```
+
+You can also use the following command to reset the database and load the fixtures:
+
+```sh
+make db-reset-f
+```
+
+To use the real data from the Kiranico site, you have two options.
+
+First option, you can synchronize the data with the command:
+
+```sh
+make sync
+```
+
+This command will synchronize the data and populate your database with all the data from the Kiranico site at that point in time.
+
+Second option, import an SQL dump. You will find the various synchronizations I have performed in the form of SQL dumps in the /dump folder. You can then import this database like any other PostgreSQL dump.
+
+## License
+
+GNU GENERAL PUBLIC LICENSE Version 3
 
 ## Project Status
 
-This project is on hold, awaiting further improvements if necessary. The next step is to upgrade to Symfony 6.4 in November 2023.
+The project is complete. It is functional and can be used as is. There are several parts left to implement (Endemic Life, etc.). These may be implemented in the future.

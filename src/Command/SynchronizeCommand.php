@@ -46,9 +46,7 @@ class SynchronizeCommand extends Command
     private function synchronize(): void
     {
         foreach ($this->synchronizers as $synchronizer) {
-            if ($synchronizer instanceof DangoSynchronizer) {
-                $synchronizer->synchronize();
-            }
+            $synchronizer->synchronize();
         }
     }
 }
