@@ -73,6 +73,10 @@ db-update: ## Update database
 db-fixtures-append: ##  Append fixtures
 	@$(SYMFONY) doctrine:fixture:load -q --append
 
+
+db-fixtures: ##  Append fixtures
+	@$(SYMFONY) doctrine:fixture:load -q
+
 validate-schema: ## Valid doctrine mapping
 	@$(SYMFONY) doctrine:schema:validate --skip-sync
 
